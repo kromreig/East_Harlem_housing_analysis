@@ -1,0 +1,86 @@
+
+.container {
+  width: 2000px;
+  background-color: #2b2d42;
+}
+
+
+#graphic {
+  padding-top: 60px;
+  background-color: #2b2d42;
+}
+
+
+#sections {
+  position: relative;
+  display: inline-block;
+  width: 400px;
+  top: 0px;
+  z-index: 90;
+  padding-bottom: 200px;
+  background-color: #2b2d42;
+}
+
+.step {
+  margin-bottom: 200px;
+  font-family: Roboto, "san-serif";
+  font-size: 16px;
+  line-height: 23px;
+  color: #edf2f4;
+  background-color: #2b2d42;
+}
+
+#sections .title {
+  font-family: Roboto,"san-serif";
+  font-size: 16px;
+  margin-bottom: 2px;
+  color: #8d99ae;
+  line-height: 1.2em;
+  background-color: #2b2d42;
+}
+
+#extra-space {
+  height: 300px;
+  background-color: #2b2d42;
+}
+
+#vis {
+  display: inline-block;
+  position: fixed;
+  top: 60px;
+  z-index: 1;
+  margin-left: 0;
+  /* height: 600px; */
+  /* width: 600px; */
+  /* background-color: #ddd; */
+}
+
+#vis .title {
+  font-size:80px;
+  text-anchor: middle;
+}
+
+#vis .sub-title {
+  font-size:40px;
+  text-anchor: middle;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #666;
+  shape-rendering: crispEdges;
+}
+
+.highlight {
+  fill: #ef233c;
+  font-weight: bold;
+}
+
+.cough-arrow {
+  stroke: #000;
+  stroke-width: 4px;
+
+}
+
+
