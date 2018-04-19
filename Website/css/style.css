@@ -21,20 +21,23 @@
   background-color: #2b2d42;
 }
 
+/*narrative*/
 .step {
   margin-bottom: 200px;
-  font-family: Roboto, "san-serif";
-  font-size: 16px;
-  line-height: 23px;
+  font-family: Saira Semi Condensed,"san-serif";
+  font-size: 17px;
+  line-height: 25px;
   color: #edf2f4;
   background-color: #2b2d42;
+  text-align: justify;
 }
 
-#sections .title {
-  font-family: Roboto,"san-serif";
-  font-size: 16px;
+/*Narrative title*/
+.title {
+  font-family: Saira Semi Condensed,"san-serif";
+  font-size: 25px;
   margin-bottom: 2px;
-  color: #8d99ae;
+  color: #ef233c;
   line-height: 1.2em;
   background-color: #2b2d42;
 }
@@ -55,19 +58,24 @@
   /* background-color: #ddd; */
 }
 
+/*Main title*/
 #vis .title {
   font-size:80px;
   text-anchor: middle;
+  font-family: Saira,"san-serif";
+  fill:#edf2f4;
 }
 
 #vis .sub-title {
   font-size:40px;
   text-anchor: middle;
+  color:#edf2f4;
+  font-family: Saira,"san-serif";
+   fill:#edf2f4;
 }
 
 .axis path,
 .axis line {
-  top: 60px;
   fill: none;
   stroke: #666;
   shape-rendering: crispEdges;
