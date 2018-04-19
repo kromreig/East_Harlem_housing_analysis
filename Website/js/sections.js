@@ -349,7 +349,7 @@ var scrollVis = function () {
       .attr('fill', 'red')
       .attr('width', 0)
       .attr('height', yBarScale.bandwidth());
-
+};
   /**
    * setupSections - each section is activated
    * by a separate function. Here we associate
