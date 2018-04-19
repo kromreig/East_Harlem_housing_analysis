@@ -10,28 +10,38 @@
 <body>
 <div class="container">
   <div id='graphic'>
+
+  <!--Each section contains the text for each element. You can style these in CSS, which gives a lot of possibilities for telling a story!-->
     <div id='sections'>
       <section class="step">
         <div class="title">Rent Stabilization</div>
         About three-eighths of the New York City's housing is rent-regulated--1.1 million apartments with 2.7 million tenants. Strict rent control applies in 71,000 apartments built before 1947. The rest are rent-stabilized, which means rent increases are limited to percentages mandated each year by the city's Rent Guidelines Board. This means there is a large difference in these rents and the market rates. That makes for an attractive investment for real estate developers, if you can get tenants out of their apartments so those apartments can be deregulated.
         <br/>Rent control and rent stabilization will expire on June 15 of 2019 if they are not renewed, and the protections and rights that rent-stabilized tenants have will be gone.
       </section>
+    <!--Each time the user gets to a new section, a new function is triggered in the D3 graphics!! The headlines correspond to the setupSection function array value in the sections.js file-->
       <section class="step">
         <div class="title">A Good Investment</div>
-        Emerald Equity's strategy to buy rent-stabilized apartments means that they have to use illegal and frequently unethical means to get tenants out of the stabilized apartments, since the only way to destabilize an apartment is when there is a vacancy.
+        Private Equity's strategy to buy rent-stabilized apartments means that they sometimes may use illegal and frequently unethical means to get tenants out of the stabilized apartments, since one of the only ways to destabilize an apartment is when there is a vacancy.
       </section>
       <section class="step">
         <div class="title">Emerald Equity in East Harlem</div>
-        But the nature of these apartments means tenants are afforded some extra legal rights, including the ability to form a tenant association. Buildings 1661 Park, 231 E 117, and 322 E 117 already have tenant associations and are directly responding to the abuse from Emerald Equity by: lawsuit with Manhattan Legal Services, organizing with UHAB and other local groups, as well as inter-building canvassing and meetings addressing Emerald Equity directly.
+        But the nature of rent-stabilized apartments means tenants are afforded some extra legal rights, including the ability to form a tenant association.
       </section>
       <section class="step">
-        <div class="title">Complaints per Unit: East Harlem vs. Emerald Equity</div>
-        Emerald Equity has just 49 buildings in East Harlem. It's a relatively small portion of the overall complaints, if we're talking absolute numbers.
-        <br/>But if we examine complaints per unit, we see that the buildings that Emerald Equity owns have always been bad compared to the rest of East Harlem-- and they've gotten much worse since Emerald Equity bought them in December 2016.
+        <div class="title">The Portfolio</div>
+        Emerald Equity has just 49 buildings in their portfolio in East Harlem.<br/>
+        The portfolio was originally consolidated in the 80s under Steven Kessner, notorious slumlord. Since then, it has been passed around by various hedgefunds, changes which tenants say were hard to keep track of.
+        <br/>Colloquially, it's known as the Dawnay, Day Portfolio.<br/>
+        <br/>Buildings 1661 Park, 231 E 117, and 322 E 117 already have tenant associations.
       </section>
       <section class="step">
-        <div class="title">Mold HISTOGRAM</div>
-        HPD complaints dealing with mold have increased.
+        <div class="title">Emerald Equity Complaints vs All of East Harlem: Totals</div>
+        In the greater context of East Harlem, the number of complaints tenants have made from Emerald Equity is fairly small.
+
+        But Emerald Equity only has 49 buildings out of a total 3078 in East Harlem.
+
+        Let's take a look at how many complaints per unit Emerald Equity has, compared to the per-unit rate in all of East Harlem.
+
         </section>
       <section class="step">
         <div class="title">Pests HISTOGRAM</div>
@@ -50,6 +60,7 @@
         The world may never know, or care, but hopefully these insights improve my speaking in 2015. Though preliminary results aren't looking so good.
       </section>
     </div>
+    <!--Vis is where the visualization lives-->
     <div id='vis'>
     </div>
     <div id="extra-space">

@@ -8,6 +8,7 @@
 var scrollVis = function () {
   // constants to define the size
   // and margins of the vis area.
+
   var width = 600;
   var height = 520;
   var margin = { top: 0, left: 100, bottom: 40, right: 10 };
@@ -21,7 +22,7 @@ var scrollVis = function () {
   var activeIndex = 0;
 
   // Sizing for the grid visualization
-  var squareSize = 6;
+  var squareSize = 10;
   var squarePad = 2;
   var numPerRow = width / (squareSize + squarePad);
 
@@ -84,6 +85,28 @@ var scrollVis = function () {
     .scale(xHistScale)
     .tickFormat(function (d) { return d + ' min'; });
 
+  //Axes for my HPD classes Line chart
+
+  var xHPDLineScale = d3.scaleTime()
+    .rangeRound([0, width]);
+
+  var yHPDLineScale = d3.scaleLinear().rangeRound([height, 0]);
+
+  var xAxisHPDLine = d3.axisBottom().scale(xHPDLineScale);
+
+  var yAxisLine = d3.axisLeft().scale(yHPDLineScale);
+
+  //Axes for my HPD Line chart
+
+  var xLineScale = d3.scaleTime()
+    .rangeRound([0, width]);
+
+    // the y axis is a linear scale
+  var yLineScale = d3.scaleLinear().rangeRound([height, 0]);
+
+  var xAxisLine = d3.axisBottom().scale(xLineScale)
+
+  var yAxisLine = d3.axisLeft().scale(yLineScale)
   // When scrolling to a new section
   // the activation function for that
   // section is called.
@@ -103,6 +126,41 @@ var scrollVis = function () {
    */
   var chart = function (selection) {
     selection.each(function (rawData) {
+      
+      //Some small processing with the other datasets
+
+      otherData.forEach(function (d) { 
+
+        //This is where I parse the "otherData"
+        var parseTime = d3.timeParse("%Y-%m-%d");
+        d.receiveddate = parseTime(d.receiveddate);
+        return d;
+      });
+
+      otherData2.forEach(function (d) {
+
+        var parseTime = d3.timeParse("%Y-%m-%d");
+        d.date = parseTime(d.date);
+        return d;
+
+      });
+
+      otherData3.forEach(function (d){
+
+        var parseTime = d3.timeParse("%Y-%m-%d");
+        d.date = parseTime(d.date);
+        return d;
+      });
+
+      //Here's the data. use these to set the domains
+      hpdData = otherData;
+      hpdClass = otherData2;
+      hpdCategorical = otherData3;
+
+      xLineScale.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
+      xHPDLineScale.domain(d3.extent(hpdClass, function(d) {return d.date; }));
+
+
       // create svg and give it a width and height
       svg = d3.select(this).selectAll('svg').data([wordData]);
       var svgE = svg.enter().append('svg');
@@ -122,6 +180,9 @@ var scrollVis = function () {
 
       // perform some preprocessing on raw data
       var wordData = getWords(rawData);
+
+      // in my line chart, the x axis is time
+
       // filter to just include filler words
       var fillerWords = getFillerWords(wordData);
 
@@ -139,7 +200,7 @@ var scrollVis = function () {
       var histMax = d3.max(histData, function (d) { return d.length; });
       yHistScale.domain([0, histMax]);
 
-      setupVis(wordData, fillerCounts, histData);
+      setupVis(wordData, fillerCounts, histData, hpdData, hpdClass, hpdCategorical);
 
       setupSections();
     });
@@ -151,16 +212,25 @@ var scrollVis = function () {
    * sections of the visualization.
    *
    * @param wordData - data object for each word.
+   * @param hpdData - data object for hpd_harlem
    * @param fillerCounts - nested data that includes
    *  element for each filler word type.
    * @param histData - binned histogram data
    */
-  var setupVis = function (wordData, fillerCounts, histData) {
+  var setupVis = function (wordData, fillerCounts, histData, hpdData, hpdClass) {
+
     // axis
     g.append('g')
       .attr('class', 'x axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(xAxisBar);
+      .call(xAxisBar)
+    g.select('.x.axis').style('opacity', 0);
+
+
+     g.append('g')
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(xAxisLine)
     g.select('.x.axis').style('opacity', 0);
 
     // count openvis title
@@ -198,10 +268,12 @@ var scrollVis = function () {
     // square grid
     // @v4 Using .merge here to ensure
     // new and old data have same attrs applied
-    var squares = g.selectAll('.square').data(wordData, function (d) { return d.word; });
+    var squares = g.selectAll('.square')
+                    .data(wordData, function (d) { return d.word; });
     var squaresE = squares.enter()
       .append('rect')
       .classed('square', true);
+
     squares = squares.merge(squaresE)
       .attr('width', squareSize)
       .attr('height', squareSize)
@@ -211,75 +283,72 @@ var scrollVis = function () {
       .attr('y', function (d) { return d.y;})
       .attr('opacity', 0);
 
-    // barchart
-    // @v4 Using .merge here to ensure
-    // new and old data have same attrs applied
-    var bars = g.selectAll('.bar').data(fillerCounts);
-    var barsE = bars.enter()
+    // in my line chart, the x axis is time
+    var x = d3.scaleTime().rangeRound([0, width]);
+
+    // the y axis is a linear scale
+    var y = d3.scaleLinear().rangeRound([height, 0]);
+
+
+    // PUT THINGS FOR LINES HERE
+    x.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
+    y.domain([0,5]);
+
+    line1 = d3.line()
+            .x(function (d){ return x(d.receiveddate);})
+            .y(function (d) { return y(d.Emerald_Equity_Count);});
+
+    line2 = d3.line()
+              .x(function (d) { return x(d.receiveddate);})
+              .y(function (d) { return y(d.East_Harlem_Count);});
+
+    var hpdX = d3.scaleTime().rangeRound([0, width]);
+    var hpdY = d3.scaleLinear().rangeRound([height, 0]);
+
+    hpdX.domain(d3.extent(hpdClass, function(d) { return d.date; }));
+    hpdY.domain([0, 15]);
+
+    lineHPDA = d3.line()
+      .x(function (d){return hpdX(d.date); })
+      .y(function (d){return hpdY(d.A); })
+
+
+//********************************************************************************
+
+    g.append('path')
+      .classed('line-chart', true)
+      .datum(hpdData)
+      .attr("fill", "none")
+      .attr('stroke', 'red')
+      .attr('stroke-linejoin', "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1.5)
+      .attr("d", line1)
+      .attr('opacity', 0);
+
+    g.append("path")
+      .classed('line-chart', true)
+      .datum(hpdData)
+      .attr("fill", "none")
+      .attr("stroke", "grey")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1.5)
+      .attr('d', line2)
+      .attr('opacity', 0);
+
+  //********************************************************************************
+
+  var bars = g.selectAll('.bar').data(hpdClass);
+     var barsE = bars.enter()
       .append('rect')
       .attr('class', 'bar');
     bars = bars.merge(barsE)
       .attr('x', 0)
-      .attr('y', function (d, i) { return yBarScale(i);})
-      .attr('fill', function (d, i) { return barColors[i]; })
+      .attr('y', function (d) { return d.A; })
+      .attr('fill', 'red')
       .attr('width', 0)
       .attr('height', yBarScale.bandwidth());
-
-    var barText = g.selectAll('.bar-text').data(fillerCounts);
-    barText.enter()
-      .append('text')
-      .attr('class', 'bar-text')
-      .text(function (d) { return d.key + '…'; })
-      .attr('x', 0)
-      .attr('dx', 15)
-      .attr('y', function (d, i) { return yBarScale(i);})
-      .attr('dy', yBarScale.bandwidth() / 1.2)
-      .style('font-size', '110px')
-      .attr('fill', 'white')
-      .attr('opacity', 0);
-
-    // histogram
-    // @v4 Using .merge here to ensure
-    // new and old data have same attrs applied
-    var hist = g.selectAll('.hist').data(histData);
-    var histE = hist.enter().append('rect')
-      .attr('class', 'hist');
-    hist = hist.merge(histE).attr('x', function (d) { return xHistScale(d.x0); })
-      .attr('y', height)
-      .attr('height', 0)
-      .attr('width', xHistScale(histData[0].x1) - xHistScale(histData[0].x0) - 1)
-      .attr('fill', barColors[0])
-      .attr('opacity', 0);
-
-    // cough title
-    g.append('text')
-      .attr('class', 'sub-title cough cough-title')
-      .attr('x', width / 2)
-      .attr('y', 60)
-      .text('Purchased')
-      .attr('opacity', 0);
-
-    // arrowhead from
-    // http://logogin.blogspot.com/2013/02/d3js-arrowhead-markers.html
-    svg.append('defs').append('marker')
-      .attr('id', 'arrowhead')
-      .attr('refY', 2)
-      .attr('markerWidth', 6)
-      .attr('markerHeight', 4)
-      .attr('orient', 'auto')
-      .append('path')
-      .attr('d', 'M 0,0 V 4 L6,2 Z');
-
-    g.append('path')
-      .attr('class', 'cough cough-arrow')
-      .attr('marker-end', 'url(#arrowhead)')
-      .attr('d', function () {
-        var line = 'M ' + ((width / 2) - 10) + ' ' + 80;
-        line += ' l 0 ' + 230;
-        return line;
-      })
-      .attr('opacity', 0);
-  };
 
   /**
    * setupSections - each section is activated
@@ -295,11 +364,11 @@ var scrollVis = function () {
     activateFunctions[1] = showFillerTitle;
     activateFunctions[2] = showGrid;
     activateFunctions[3] = highlightGrid;
-    activateFunctions[4] = showBar;
-    activateFunctions[5] = showHistPart;
-    activateFunctions[6] = showHistAll;
-    activateFunctions[7] = showCough;
-    activateFunctions[8] = showHistAll;
+    activateFunctions[4] = showHPDLine;
+    activateFunctions[5] = showDOBLine;
+    activateFunctions[6] = showEELine;
+    activateFunctions[7] = showLead;
+    activateFunctions[8] = showMold;
 
     // updateFunctions are called while
     // in a particular section to update
@@ -406,7 +475,7 @@ var scrollVis = function () {
    *  are moved back to their place in the grid
    */
   function highlightGrid() {
-    hideAxis();
+    hidexAxis();
     g.selectAll('.bar')
       .transition()
       .duration(1500)
@@ -416,6 +485,11 @@ var scrollVis = function () {
       .transition()
       .duration(0)
       .attr('opacity', 0);
+
+    g.selectAll('.line-chart')
+      .transition()
+      .duration(0)
+      .style('opacity',0);
 
 
     g.selectAll('.square')
@@ -429,7 +503,7 @@ var scrollVis = function () {
     // transitions are interrupted.
     g.selectAll('.fill-square')
       .transition('move-fills')
-      .duration(1500)
+      .duration(1000)
       .attr('x', function (d) {
         return d.x;
       })
@@ -439,7 +513,7 @@ var scrollVis = function () {
 
     g.selectAll('.fill-square')
       .transition()
-      .duration(1500)
+      .duration(1000)
       .attr('opacity', 1.0)
       .attr('fill', function (d) { return d.filler ? '#ef233c' : '#edf2f4'; });
   }
@@ -452,9 +526,9 @@ var scrollVis = function () {
    * shows: barchart
    *
    */
-  function showBar() {
+  function showHPDLine() {
+    showxAxis(xAxisLine);
     // ensure bar axis is set
-    showAxis(xAxisBar);
 
     g.selectAll('.square')
       .transition()
@@ -472,124 +546,74 @@ var scrollVis = function () {
       .duration(0)
       .attr('opacity', 0);
 
-    g.selectAll('.hist')
+    g.selectAll('.line-chart')
       .transition()
-      .duration(600)
-      .attr('height', function () { return 0; })
-      .attr('y', function () { return height; })
-      .style('opacity', 0);
-
-    g.selectAll('.bar')
-      .transition()
-      .delay(function (d, i) { return 300 * (i + 1);})
-      .duration(600)
-      .attr('width', function (d) { return xBarScale(d.value); });
-
-    g.selectAll('.bar-text')
-      .transition()
-      .duration(600)
-      .delay(1200)
-      .attr('opacity', 1);
+      .delay(800)
+      .duration(800)
+      .style('opacity',1);
   }
 
-  /**
-   * showHistPart - shows the first part
-   *  of the histogram of filler words
-   *
-   * hides: barchart
-   * hides: last half of histogram
-   * shows: first half of histogram
-   *
-   */
-  function showHistPart() {
-    // switch the axis to histogram one
-    showAxis(xAxisHist);
+ 
+  function showDOBLine() {
+    hidexAxis();
 
-    g.selectAll('.bar-text')
+    g.selectAll('.line-chart')
       .transition()
       .duration(0)
-      .attr('opacity', 0);
+      .style('opacity',0);
 
-    g.selectAll('.bar')
-      .transition()
-      .duration(600)
-      .attr('width', 0);
-
-    // here we only show a bar if
-    // it is before the 15 minute mark
-    g.selectAll('.hist')
-      .transition()
-      .duration(600)
-      .attr('y', function (d) { return (d.x0 < 15) ? yHistScale(d.length) : height; })
-      .attr('height', function (d) { return (d.x0 < 15) ? height - yHistScale(d.length) : 0; })
-      .style('opacity', function (d) { return (d.x0 < 15) ? 1.0 : 1e-6; });
-  }
-
-  /**
-   * showHistAll - show all histogram
-   *
-   * hides: cough title and color
-   * (previous step is also part of the
-   *  histogram, so we don't have to hide
-   *  that)
-   * shows: all histogram bars
-   *
-   */
-  function showHistAll() {
-    // ensure the axis to histogram one
-    showAxis(xAxisHist);
-
-    g.selectAll('.cough')
+    g.selectAll('.hpd-line-chart')
       .transition()
       .duration(0)
-      .attr('opacity', 0);
+      .style('opacity',1)
 
-    // named transition to ensure
-    // color change is not clobbered
-    g.selectAll('.hist')
-      .transition('color')
-      .duration(500)
-      .style('fill', '#008080');
-
-    g.selectAll('.hist')
-      .transition()
-      .duration(1200)
-      .attr('y', function (d) { return yHistScale(d.length); })
-      .attr('height', function (d) { return height - yHistScale(d.length); })
-      .style('opacity', 1.0);
   }
 
-  /**
-   * showCough
-   *
-   * hides: nothing
-   * (previous and next sections are histograms
-   *  so we don't have to hide much here)
-   * shows: histogram
-   *
-   */
-  function showCough() {
-    // ensure the axis to histogram one
-    showAxis(xAxisHist);
+  function showEELine() {
 
-    g.selectAll('.hist')
+    g.selectAll('.line-chart')
       .transition()
-      .duration(600)
-      .attr('y', function (d) { return yHistScale(d.length); })
-      .attr('height', function (d) { return height - yHistScale(d.length); })
-      .style('opacity', 1.0);
+      .duration(0)
+      .style('opacity',0);
+
   }
+
+  function showLead() {
+
+    g.selectAll('.line-chart')
+      .transition()
+      .duration(0)
+      .style('opacity',0);
+
+  }
+
+  function showMold() {
+
+    g.selectAll('.line-chart')
+      .transition()
+      .duration(0)
+      .style('opacity',0);
+
+  }
+
 
   /**
    * showAxis - helper function to
    * display particular xAxis
    *
    * @param axis - the axis to show
-   *  (xAxisHist or xAxisBar)
+   *  (xAxisHist or xAxisBar or xAxisLine)
    */
-  function showAxis(axis) {
+  function showxAxis(x_axis) {
     g.select('.x.axis')
-      .call(axis)
+      .call(x_axis)
+      .transition().duration(500)
+      .style('opacity', 1);
+  }
+
+  function showyAxis(y_axis) {
+    g.select('.y.axis')
+      .call(y_axis)
       .transition().duration(500)
       .style('opacity', 1);
   }
@@ -599,8 +623,14 @@ var scrollVis = function () {
    * to hide the axis
    *
    */
-  function hideAxis() {
+  function hidexAxis() {
     g.select('.x.axis')
+      .transition().duration(500)
+      .style('opacity', 0);
+  }
+  
+  function hideyAxis() {
+    g.select('.y.axis')
       .transition().duration(500)
       .style('opacity', 0);
   }
@@ -739,6 +769,12 @@ var scrollVis = function () {
     lastIndex = activeIndex;
   };
 
+  chart.setOtherData = function(other, other2, other3){
+    otherData = other;
+    otherData2 = other2;
+    otherData3 = other3;
+  };
+
   /**
    * update
    *
@@ -762,12 +798,18 @@ var scrollVis = function () {
  *
  * @param data - loaded tsv data
  */
-function display(data) {
+function display(error, portfolio, hpd_harlem, hpd_violations_date_class, hpd_categorical) {
   // create a new plot and
   // display it
+  console.log(portfolio);
+  console.log(hpd_harlem);
+
   var plot = scrollVis();
+
+  plot.setOtherData(hpd_harlem, hpd_violations_date_class, hpd_categorical);
+
   d3.select('#vis')
-    .datum(data)
+    .datum(portfolio)
     .call(plot);
 
   // setup scroll functionality
@@ -793,4 +835,9 @@ function display(data) {
 }
 
 // load data and display
-d3.tsv('data/words.tsv', display);
+d3.queue()
+  .defer(d3.csv, 'data/portfolio.csv')
+  .defer(d3.csv, 'data/hpd_harlem.csv')
+  .defer(d3.csv, 'data/hpd_violations_date_class.csv')
+  .defer(d3.csv, 'data/hpd_categorical.csv')
+  .await(display)

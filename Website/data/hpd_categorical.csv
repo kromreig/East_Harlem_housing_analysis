@@ -1,4 +1,4 @@
-,date,Lead,Mold,Gas,Heat,Pests
+index,date,Lead,Mold,Gas,Heat,Pests
 0,2014-01-31,1.0,1.0,0.0,0.0,0.0
 1,2014-02-28,0.0,0.0,0.0,1.0,0.0
 2,2014-03-31,2.0,0.0,0.0,1.0,2.0

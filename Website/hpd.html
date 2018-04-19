@@ -11,10 +11,10 @@ var svg = d3.select("svg"),
 
 var parseTime = d3.timeParse("%Y-%m-%d");
 
-var x = d3.scaleTime()
+var x_HPDCompare = d3.scaleTime()
     .rangeRound([0, width]);
 
-var y = d3.scaleLinear()
+var y_HPDCompare = d3.scaleLinear()
     .rangeRound([height, 0]);
 
 var line1 = d3.line()
@@ -25,7 +25,7 @@ var line2 = d3.line()
     .x(function(d) { return x(d.receiveddate); })
     .y(function(d) { return y(d.East_Harlem_Count); });
 
-d3.csv("hpd_harlem.csv", function(d) {
+d3.csv("data/hpd_harlem.csv", function(d) {
   d.receiveddate = parseTime(d.receiveddate);
   d.Emerald_Equity_Count = +d.Emerald_Equity_Count;
   d.East_Harlem_Count = +d.East_Harlem_Count;
@@ -33,8 +33,8 @@ d3.csv("hpd_harlem.csv", function(d) {
 }, function(error, data) {
   if (error) throw error;
 
-  x.domain(d3.extent(data, function(d) { return d.receiveddate; }));
-  y.domain(d3.extent(data, function(d) { return d.Emerald_Equity_Count; }));
+  x_HPDCompare.domain(d3.extent(data, function(d) { return d.receiveddate; }));
+  y_HPDCompare.domain(d3.extent(data, function(d) { return d.Emerald_Equity_Count; }));
 
   g.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -43,7 +43,7 @@ d3.csv("hpd_harlem.csv", function(d) {
       .remove();
 
   g.append("g")
-      .call(d3.axisLeft(y))
+      .call(d3.axisLeft(y).ticks(5))
     .append("text")
       .attr("fill", "#000")
       .attr("transform", "rotate(-90)")
@@ -53,7 +53,7 @@ d3.csv("hpd_harlem.csv", function(d) {
       .text("Number of Complaints");
 
   g.append("path")
-      .datum(data)
+      .datum(hpdData)
       .attr("fill", "none")
       .attr("stroke", "red")
       .attr("stroke-linejoin", "round")
@@ -62,7 +62,7 @@ d3.csv("hpd_harlem.csv", function(d) {
       .attr("d", line1);
 
   g.append("path")
-      .datum(data)
+      .datum(hpdData)
       .attr("fill", "none")
       .attr("stroke", "grey")
       .attr("stroke-linejoin", "round")

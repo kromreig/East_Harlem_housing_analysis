@@ -67,6 +67,7 @@
 
 .axis path,
 .axis line {
+  top: 60px;
   fill: none;
   stroke: #666;
   shape-rendering: crispEdges;
