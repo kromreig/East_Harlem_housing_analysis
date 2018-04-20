@@ -51,27 +51,6 @@ var scrollVis = function () {
   // Color is determined just by the index of the bars
   var barColors = { 0: '#008080', 1: '#399785', 2: '#5AAF8C' };
 
-  // The histogram display shows the
-  // first 30 minutes of data
-  // so the range goes from 0 to 30
-  // @v4 using new scale name
-  var xHistScale = d3.scaleLinear()
-    .domain([0, 30])
-    .range([0, width - 20]);
-
-  // @v4 using new scale name
-  var yHistScale = d3.scaleLinear()
-    .range([height, 0]);
-
-  // The color translation uses this
-  // scale to convert the progress
-  // through the section into a
-  // color value.
-  // @v4 using new scale name
-  var coughColorScale = d3.scaleLinear()
-    .domain([0, 1.0])
-    .range(['#008080', 'red']);
-
   // You could probably get fancy and
   // use just one axis, modifying the
   // scale, but I will use two separate
@@ -210,14 +189,8 @@ var scrollVis = function () {
       var countMax = d3.max(fillerCounts, function (d) { return d.value;});
       xBarScale.domain([0, countMax]);
 
-      // get aggregated histogram data
-
-      var histData = getHistogram(fillerWords);
-      // set histogram's domain
-      var histMax = d3.max(histData, function (d) { return d.length; });
-      yHistScale.domain([0, histMax]);
-
-      setupVis(wordData, fillerCounts, histData, hpdData, hpdClass, hpdCategorical);
+      
+      setupVis(wordData, fillerCounts, hpdData, hpdClass, hpdCategorical);
 
       setupSections();
     });
@@ -234,9 +207,10 @@ var scrollVis = function () {
    *  element for each filler word type.
    * @param histData - binned histogram data
    */
-  var setupVis = function (wordData, fillerCounts, histData, hpdData, hpdClass, hpdCategorical) {
+  var setupVis = function (wordData, fillerCounts, hpdData, hpdClass, hpdCategorical) {
 
-    // axis
+  //axes
+  //********************************************************************************
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
@@ -255,7 +229,8 @@ var scrollVis = function () {
       .call(xAxisLine)
     g.select('.x-axis').style('opacity', 0);
 
-    // count openvis title
+//titles
+//********************************************************************************
     g.append('text')
       .attr('class', 'title openvis-title highlight')
       .attr('x', width / 2)
@@ -271,7 +246,7 @@ var scrollVis = function () {
     g.selectAll('.openvis-title')
       .attr('opacity', 0);
 
-    // count filler word count title
+// count filler word count title
     g.append('text')
       .attr('class', 'title count-title highlight')
       .attr('x', width / 2)
@@ -287,9 +262,8 @@ var scrollVis = function () {
     g.selectAll('.count-title')
       .attr('opacity', 0);
 
-    // square grid
-    // @v4 Using .merge here to ensure
-    // new and old data have same attrs applied
+//portfolio squares
+//********************************************************************************
     var squares = g.selectAll('.square')
                     .data(wordData, function (d) { return d.word; });
     var squaresE = squares.enter()
@@ -305,16 +279,14 @@ var scrollVis = function () {
       .attr('y', function (d) { return d.y;})
       .attr('opacity', 0);
 
-    // in my line chart, the x axis is time
+//The first HPD line chart
+//********************************************************************************
     var x = d3.scaleTime().rangeRound([0, width]);
-
-    // the y axis is a linear scale
     var y = d3.scaleLinear().rangeRound([height, 0]);
 
 
 
     var maxY = d3.max(hpdData, function(d) { return +(d.East_Harlem_Count*3078);} );
-    // PUT THINGS FOR LINES HERE
     x.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
     y.domain([0, maxY]);
 
@@ -327,17 +299,15 @@ var scrollVis = function () {
               .y(function (d) { return y((+d.East_Harlem_Count)*3078);});
 
 
+//the Per unit line chart
+//********************************************************************************
     var xPU = d3.scaleTime().rangeRound([0, width]);
-
-    // the y axis is a linear scale
     var yPU = d3.scaleLinear().rangeRound([height, 0]);
 
-
-
-    var maxY = d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count);} );
-    // PUT THINGS FOR LINES HERE
+    var maxYPU = d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count);} );
+    
     xPU.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
-    yPU.domain([0, maxY]);
+    yPU.domain([0, maxYPU]);
 
 
     line1 = d3.line()
@@ -348,6 +318,8 @@ var scrollVis = function () {
               .x(function (d) { return xPU(d.receiveddate);})
               .y(function (d) { return yPU(d.East_Harlem_Count);});
 
+//the hpd categorial stacked bar chart
+//********************************************************************************
     var hpdX = d3.scaleTime().rangeRound([0, width]);
     var hpdY = d3.scaleLinear().rangeRound([height, height/2]);
 
@@ -366,7 +338,7 @@ var scrollVis = function () {
       .x(function (d){return hpdX(d.date); })
       .y(function (d){return hpdY(d.C); })
 
-
+//Time to start putting things on the actual page. but transparently
 //********************************************************************************
 
     g.append('path')
@@ -391,6 +363,7 @@ var scrollVis = function () {
       .attr('d', lineHarlem)
       .attr('opacity', 0);
 
+  //per-unit lines
   //********************************************************************************
 
 g.append('path')
@@ -415,7 +388,8 @@ g.append('path')
       .attr('d', line2)
       .attr('opacity', 0);
 
-  //********************************************************************************
+//hpd violation classes
+//********************************************************************************
 
 
   g.append("path")
@@ -425,7 +399,7 @@ g.append('path')
       .attr("stroke", "grey")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
-      .attr("stroke-width", .5)
+      .attr("stroke-width", .75)
       .attr('d', lineHPDA)
       .attr('opacity', 0);
 
@@ -433,10 +407,10 @@ g.append('path')
       .classed('class-line-chart-B', true)
       .datum(hpdClass)
       .attr("fill", "none")
-      .attr("stroke", "white")
+      .attr("stroke", "#383e3b")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
-      .attr("stroke-width", .5)
+      .attr("stroke-width", .75)
       .attr('d', lineHPDB)
       .attr('opacity', 0);
 
@@ -447,12 +421,12 @@ g.append('path')
       .attr("stroke", "red")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
-      .attr("stroke-width", .5)
+      .attr("stroke-width", .75)
       .attr('d', lineHPDC)
       .attr('opacity', 0);
 
 
-  //*********************************************************************************************
+//*********************************************************************************************
   g.selectAll(".hpd-bar")
     .data(d3.stack().keys(hpdCategorical.columns.slice(1))(hpdCategorical))
     .enter().append("g")
@@ -467,13 +441,9 @@ g.append('path')
     .attr("height", function(d) {return yHPDBarScale(d[0]) - yHPDBarScale(d[1]);})
     .attr('opacity', 0);
 };
-  /**
-   * setupSections - each section is activated
-   * by a separate function. Here we associate
-   * these functions to the sections based on
-   * the section's index.
-   *
-   */
+
+//These are all the sections
+//********************************************************************************
   var setupSections = function () {
     // activateFunctions are called each
     // time the active section changes
@@ -488,41 +458,11 @@ g.append('path')
     activateFunctions[8] = showHPDClassC;
     activateFunctions[9] = showHPDBar;
 
-    // updateFunctions are called while
-    // in a particular section to update
-    // the scroll progress in that section.
-    // Most sections do not need to be updated
-    // for all scrolling and so are set to
-    // no-op functions.
-    for (var i = 0; i < 10; i++) {
-      updateFunctions[i] = function () {};
-    }
-    updateFunctions[8] = updateCough;
   };
 
-  /**
-   * ACTIVATE FUNCTIONS
-   *
-   * These will be called their
-   * section is scrolled to.
-   *
-   * General pattern is to ensure
-   * all content for the current section
-   * is transitioned in, while hiding
-   * the content for the previous section
-   * as well as the next section (as the
-   * user may be scrolling up or down).
-   *
-   */
-
-  /**
-   * showTitle - initial title
-   *
-   * hides: count title
-   * (no previous step to hide)
-   * shows: intro title
-   *
-   */
+//Functions to manage the transitions
+//Hide elements from before and after
+//********************************************************************************
   function showTitle() {
     hidexAxis();
     g.selectAll('.count-title')
@@ -536,14 +476,7 @@ g.append('path')
       .attr('opacity', 1.0);
   }
 
-  /**
-   * showFillerTitle - filler counts
-   *
-   * hides: intro title
-   * hides: square grid
-   * shows: filler count title
-   *
-   */
+
   function showFillerTitle() {
     hidexAxis();
     g.selectAll('.openvis-title')
@@ -639,17 +572,9 @@ g.append('path')
       .attr('fill', function (d) { return d.filler ? '#ef233c' : '#edf2f4'; });
   }
 
-  /**
-   * showBar - barchart
-   *
-   * hides: square grid
-   * hides: histogram
-   * shows: barchart
-   *
-   */
-  function showTotalLine() {
+
+function showTotalLine() {
     showxAxis(xAxisLine);
-    // ensure bar axis is set
 
     g.selectAll('.square')
       .transition()
@@ -683,7 +608,6 @@ g.append('path')
 
 function showPerUnitLine() {
     showxAxis(xAxisLine);
-    // ensure bar axis is set
 
     g.selectAll('.line-chart')
       .transition()
@@ -724,7 +648,6 @@ function showPerUnitLine() {
   }
 
 function showHPDClassB() {
-    hidexAxis();
 
     g.selectAll('.class-line-chart-B')
       .transition()
@@ -739,7 +662,6 @@ function showHPDClassB() {
   }
 
 function showHPDClassC() {
-    hidexAxis();
 
     g.selectAll('.class-line-chart-C')
       .transition()
@@ -755,7 +677,6 @@ function showHPDClassC() {
 
 
   function showHPDBar() {
-    hidexAxis();
 
     g.selectAll('.class-line-chart-A')
       .transition()
@@ -775,7 +696,7 @@ function showHPDClassC() {
     g.selectAll('.hpd-bar')
       .transition()
       .duration(800)
-      .style('opacity',1);
+      .style('opacity',.6);
 
   }
 
@@ -818,38 +739,6 @@ function showHPDClassC() {
       .style('opacity', 0);
   }
 
-  /**
-   * UPDATE FUNCTIONS
-   *
-   * These will be called within a section
-   * as the user scrolls through it.
-   *
-   * We use an immediate transition to
-   * update visual elements based on
-   * how far the user has scrolled
-   *
-   */
-
-  /**
-   * updateCough - increase/decrease
-   * cough text and color
-   *
-   * @param progress - 0.0 - 1.0 -
-   *  how far user has scrolled in section
-   */
-  function updateCough(progress) {
-    g.selectAll('.cough')
-      .transition()
-      .duration(0)
-      .attr('opacity', progress);
-
-    g.selectAll('.hist')
-      .transition('cough')
-      .duration(0)
-      .style('fill', function (d) {
-        return (d.x0 >= 14) ? coughColorScale(progress) : '#008080';
-      });
-  }
 
   /**
    * DATA FUNCTIONS
@@ -901,28 +790,6 @@ function showHPDClassC() {
   }
 
   /**
-   * getHistogram - use d3's histogram layout
-   * to generate histogram bins for our word data
-   *
-   * @param data - word data. we use filler words
-   *  from getFillerWords
-   */
-  function getHistogram(data) {
-    // only get words from the first 30 minutes
-    var thirtyMins = data.filter(function (d) { return d.min < 30; });
-    // bin data into 2 minutes chuncks
-    // from 0 - 31 minutes
-    // @v4 The d3.histogram() produces a significantly different
-    // data structure then the old d3.layout.histogram().
-    // Take a look at this block:
-    // https://bl.ocks.org/mbostock/3048450
-    // to inform how you use it. Its different!
-    return d3.histogram()
-      .thresholds(xHistScale.ticks(10))
-      .value(function (d) { return d.min; })(thirtyMins);
-  }
-
-  /**
    * groupByWord - group words together
    * using nest. Used to get counts for
    * barcharts.
@@ -964,9 +831,6 @@ function showHPDClassC() {
    * @param index
    * @param progress
    */
-  chart.update = function (index, progress) {
-    updateFunctions[index](progress);
-  };
 
   // return chart function
   return chart;
@@ -1010,10 +874,6 @@ function display(error, portfolio, hpd_harlem, hpd_violations_date_class_resampl
 
     // activate current section
     plot.activate(index);
-  });
-
-  scroll.on('progress', function (index, progress) {
-    plot.update(index, progress);
   });
 }
 
