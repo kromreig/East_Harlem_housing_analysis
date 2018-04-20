@@ -76,16 +76,14 @@ var scrollVis = function () {
     .padding(0.05)
     .align(0.1);
 
-  var xHPDAxis = d3.axisBottom()
-    .scale(xHPDBarScale)
-    .tickFormat(d3.timeFormat("%Y"))
-    .ticks(10);
+  var xHPDAxis = d3.axisBottom(xHPDBarScale)
+  .tickFormat(d3.timeFormat("%Y"));
 
   var yHPDBarScale = d3.scaleLinear()
     .rangeRound([height, 0]);
 
   var zHPDBarScale = d3.scaleOrdinal()
-    .range(["#999a9b", "#6f7173","red", "#383e3b", "#d4d4d4"]);
+    .range(["red"]);
 
   var activateFunctions = [];
 
@@ -216,11 +214,16 @@ var scrollVis = function () {
       .call(xAxisBar)
     g.select('.x-axis').style('opacity', 0);
 
-    g.append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(xHPDAxis)
-    g.select('.x-axis').style('opacity', 0);
+    g.append("g")
+      .attr("class", "x-axis-hpd")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(xHPDBarScale).tickFormat(d3.timeFormat("%Y-%m-%d")))
+      .selectAll("text")  
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)")
+        .attr('opacity', 0);
 
      g.append('g')
       .attr('class', 'x-axis')
@@ -280,7 +283,7 @@ var scrollVis = function () {
       .attr('y', function (d) { return d.y;})
       .attr('opacity', 0);
 
-//The first HPD line chart
+//Total Harlem/EE Lines
 //********************************************************************************
     var x = d3.scaleTime().rangeRound([0, width]);
     var y = d3.scaleLinear().rangeRound([height, 0]);
@@ -300,7 +303,7 @@ var scrollVis = function () {
               .y(function (d) { return y((+d.East_Harlem_Count)*3078);});
 
 
-//the Per unit line chart
+//the Per unit lines
 //********************************************************************************
     var xPU = d3.scaleTime().rangeRound([0, width]);
     var yPU = d3.scaleLinear().rangeRound([height, 0]);
@@ -344,7 +347,7 @@ var scrollVis = function () {
 //********************************************************************************
 
     g.append('path')
-      .classed('line-chart', true)
+      .classed('line-chart1', true)
       .datum(hpdData)
       .attr("fill", "none")
       .attr('stroke', 'red')
@@ -355,7 +358,7 @@ var scrollVis = function () {
       .attr('opacity', 0);
 
     g.append("path")
-      .classed('line-chart', true)
+      .classed('line-chart2', true)
       .datum(hpdData)
       .attr("fill", "none")
       .attr("stroke", "grey")
@@ -363,32 +366,6 @@ var scrollVis = function () {
       .attr("stroke-linecap", "round")
       .attr("stroke-width", 1.5)
       .attr('d', lineHarlem)
-      .attr('opacity', 0);
-
-  //per-unit lines
-  //********************************************************************************
-  showyAxis(yAxisLine);
-
-g.append('path')
-      .classed('pu-line-chart', true)
-      .datum(hpdData)
-      .attr("fill", "none")
-      .attr('stroke', 'red')
-      .attr('stroke-linejoin', "round")
-      .attr("stroke-linecap", "round")
-      .attr("stroke-width", 1.5)
-      .attr("d", line1)
-      .attr('opacity', 0);
-
-    g.append("path")
-      .classed('pu-line-chart', true)
-      .datum(hpdData)
-      .attr("fill", "none")
-      .attr("stroke", "grey")
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-linecap", "round")
-      .attr("stroke-width", 1.5)
-      .attr('d', line2)
       .attr('opacity', 0);
 
 //hpd violation classes
@@ -430,19 +407,52 @@ g.append('path')
 
 
 //*********************************************************************************************
-  g.selectAll(".hpd-bar")
-    .data(d3.stack().keys(hpdCategorical.columns.slice(1))(hpdCategorical))
-    .enter().append("g")
-      .attr("fill", function(d) {return zHPDBarScale(d.key);})
-  .selectAll('rect')
-    .data(function(d) { return d; })
+  g.selectAll(".hpd-bar-lead")
+    .data(hpdCategorical)
   .enter().append("rect")
-    .classed("hpd-bar", true)
+    .classed("hpd-bar-lead hpd-bar", true)
+    .attr("fill", "red")
     .attr("width", xHPDBarScale.bandwidth())
-    .attr("x", function(d) {return xHPDBarScale(d.data.date);})
-    .attr("y", function(d) {return yHPDBarScale(d[1]);})
-    .attr("height", function(d) {return yHPDBarScale(d[0]) - yHPDBarScale(d[1]);})
+    .attr("x", function(d) {return xHPDBarScale(d.date);})
+    .attr("y", function(d) {return yHPDBarScale(d.Lead)- 3*height/4;})
+    .attr("height", function(d) {return +(height- yHPDBarScale(d.Lead));})
     .attr('opacity', 0);
+
+g.selectAll(".hpd-bar-mold")
+    .data(hpdCategorical)
+  .enter().append("rect")
+    .classed("hpd-bar-mold hpd-bar", true)
+    .attr("fill", "grey")
+    .attr("width", xHPDBarScale.bandwidth())
+    .attr("x", function(d) {return xHPDBarScale(d.date);})
+    .attr("y", function(d) {return yHPDBarScale(d.Mold) - 2*height/4})
+    .attr("height", function(d) {return +(height - yHPDBarScale(d.Mold));})
+    .attr('opacity', 0);
+
+g.selectAll(".hpd-bar-gas hpd-bar")
+    .data(hpdCategorical)
+  .enter().append("rect")
+    .classed("hpd-bar-gas hpd-bar", true)
+    .attr("fill", "white")
+    .attr("width", xHPDBarScale.bandwidth())
+    .attr("x", function(d) {return xHPDBarScale(d.date);})
+    .attr("y", function(d) {return yHPDBarScale(d.Gas) - height/4;})
+    .attr("height", function(d) {return +(height - yHPDBarScale(d.Gas));})
+    .attr('opacity', 0);
+
+g.selectAll(".hpd-bar-heat")
+    .data(hpdCategorical)
+  .enter().append("rect")
+    .classed("hpd-bar-heat hpd-bar", true)
+    .attr("fill", "black")
+    .attr("width", xHPDBarScale.bandwidth())
+    .attr("x", function(d) {return xHPDBarScale(d.date);})
+    .attr("y", function(d) {return yHPDBarScale(d.Heat)})
+    .attr("height", function(d) {return +(height - yHPDBarScale(d.Heat));})
+    .attr('opacity', 0);
+
+
+
 };
 
 //These are all the sections
@@ -573,6 +583,16 @@ g.append('path')
       .duration(1000)
       .attr('opacity', 1.0)
       .attr('fill', function (d) { return d.filler ? '#ef233c' : '#edf2f4'; });
+
+     g.selectAll('.line-chart1')
+      .transition()
+      .duration(0)
+      .style('opacity',0);
+
+     g.selectAll('.line-chart2')
+      .transition()
+      .duration(0)
+      .style('opacity',0);
   }
 
 
@@ -596,31 +616,41 @@ function showTotalLine() {
       .duration(0)
       .attr('opacity', 0);
 
-    g.selectAll('.line-chart')
+    g.selectAll('.line-chart1')
+      .datum(hpdData)
+      .attr("d", lineEE)
       .transition()
       .delay(600)
       .duration(800)
       .style('opacity',1);
 
-    g.selectAll('.pu-line-chart')
+    g.selectAll('.line-chart2')
+      .datum(hpdData)
+      .attr("d", lineHarlem)
       .transition()
-      .duration(0)
-      .style('opacity',0);
+      .delay(600)
+      .duration(600)
+      .style('opacity',1)
   }
 
 
 function showPerUnitLine() {
     showxAxis(xAxisLine);
 
-    g.selectAll('.line-chart')
+    g.selectAll('.line-chart1')
+      .datum(hpdData)
       .transition()
-      .duration(0)
-      .style('opacity',0);
+      .attr("d", line1)
+      .delay(600)
+      .duration(600)
+      .style('opacity',1);
 
-    g.selectAll('.pu-line-chart')
+    g.selectAll('.line-chart2')
+      .datum(hpdData)
       .transition()
-      .delay(0)
-      .duration(800)
+      .attr("d", line2)
+      .delay(600)
+      .duration(600)
       .style('opacity',1);
 
     g.selectAll('.class-line-chart-A')
@@ -632,7 +662,13 @@ function showPerUnitLine() {
   function showHPDClassA() {
     hidexAxis();
 
-     g.selectAll('.pu-line-chart')
+
+     g.selectAll('.line-chart1')
+      .transition()
+      .duration(0)
+      .style('opacity',0);
+
+    g.selectAll('.line-chart2')
       .transition()
       .duration(0)
       .style('opacity',0);
@@ -680,6 +716,7 @@ function showHPDClassC() {
 
 
   function showHPDBar() {
+    showxAxis(xHPDAxis);
 
     g.selectAll('.class-line-chart-A')
       .transition()
@@ -699,7 +736,12 @@ function showHPDClassC() {
     g.selectAll('.hpd-bar')
       .transition()
       .duration(800)
-      .style('opacity',.6);
+      .style('opacity',1);
+
+    g.selectAll('.x-axis-hpd')
+      .transition()
+      .duration(800)
+      .style('opacity',1)
 
   }
 
