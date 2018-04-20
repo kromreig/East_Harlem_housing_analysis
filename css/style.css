@@ -1,30 +1,95 @@
- h1{
-  font-family: "PT Serif", helvetica, sans-serif;
-  font-style:normal;
-  font-size: 1.8em;
-  line-height: 32px;
-  max-width: 900px;
-  text-align: justify;}
- h2{
-  font-family: "Open Sans", helvetica, sans-serif;
-  font-style:normal;
-  font-size: 1.1em;
-  line-height: 32px;
-  max-width: 700px;
-  text-align: justify;}
-  h3{
-  font-family: "Open Sans", helvetica, sans-serif;
-  font-style:normal;
-  font-size: 0.8em;
-  line-height: 22px;
-  max-width: 700px;
-  text-align: justify;
 
-  }
-   h4{
-  font-family: "Open Sans", helvetica, sans-serif;
-  font-style:normal;
-  font-size: 1.1em;
-  line-height: 32px;
-  max-width: 700px;
-  text-align: justify;}
+.container {
+  width: 2000px;
+  background-color: #2b2d42;
+}
+
+
+#graphic {
+  padding-top: 60px;
+  background-color: #2b2d42;
+}
+
+
+#sections {
+  position: relative;
+  display: inline-block;
+  width: 400px;
+  top: 0px;
+  z-index: 90;
+  padding-bottom: 200px;
+  background-color: #2b2d42;
+}
+
+/*narrative*/
+.step {
+  margin-bottom: 200px;
+  font-family: Saira Semi Condensed,"san-serif";
+  font-size: 17px;
+  line-height: 25px;
+  color: #edf2f4;
+  background-color: #2b2d42;
+  text-align: justify;
+}
+
+/*Narrative title*/
+.title {
+  font-family: Saira Semi Condensed,"san-serif";
+  font-size: 25px;
+  margin-bottom: 2px;
+  color: #ef233c;
+  line-height: 1.2em;
+  background-color: #2b2d42;
+}
+
+#extra-space {
+  height: 300px;
+  background-color: #2b2d42;
+}
+
+#vis {
+  display: inline-block;
+  position: fixed;
+  top: 60px;
+  z-index: 1;
+  margin-left: 0;
+  /* height: 600px; */
+  /* width: 600px; */
+  /* background-color: #ddd; */
+}
+
+/*Main title*/
+#vis .title {
+  font-size:80px;
+  text-anchor: middle;
+  font-family: Saira,"san-serif";
+  fill:#edf2f4;
+}
+
+#vis .sub-title {
+  font-size:40px;
+  text-anchor: middle;
+  color:#edf2f4;
+  font-family: Saira,"san-serif";
+   fill:#edf2f4;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #666;
+  shape-rendering: crispEdges;
+}
+
+.highlight {
+  fill: #ef233c;
+  font-weight: bold;
+}
+
+.cough-arrow {
+  stroke: #000;
+  stroke-width: 4px;
+
+}
+
+

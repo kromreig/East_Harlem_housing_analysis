@@ -1,72 +1,102 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>East_Harlem_housing_analysis.js</title>
-    <!-- Google fonts code -->
-    <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Open+Sans">
-      <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=PT+Serif">
-       <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-       <link rel="stylesheet" type="text/css" href="css/style.css"/>
-        </head>
+<head>
+  <title>Scrolling Sections</title>
+  <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto">
+          <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Saira+Semi+Condensed|Saira:700">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+<body>
+<div class="container">
+  <div id='graphic'>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="https://github.com/kromreig/East_Harlem_housing_analysis">GitHub</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Methodology
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="Emerald_Equity_Exploratory_Data_Analysis.html">
-            <a class="dropdown-item" href="Emerald_Equity_Exploratory_Data_Analysis.html">
-          Process Log</a>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
+  <!--Each section contains the text for each element. You can style these in CSS, which gives a lot of possibilities for telling a story!-->
+    <div id='sections'>
+      <section class="step">
+        <div class="title">Rent Stabilization</div>
+        About three-eighths of the New York City's housing is rent-regulated--1.1 million apartments with 2.7 million tenants. Strict rent control applies in 71,000 apartments built before 1947. The rest are rent-stabilized, which means rent increases are limited to percentages mandated each year by the city's Rent Guidelines Board. This means there is a large difference in these rents and the market rates. That makes for an attractive investment for real estate developers, if you can get tenants out of their apartments so those apartments can be deregulated.
+        <br/>Rent control and rent stabilization will expire on June 15 of 2019 if they are not renewed, and the protections and rights that rent-stabilized tenants have will be gone.
+      </section>
+    <!--Each time the user gets to a new section, a new function is triggered in the D3 graphics!! The headlines correspond to the setupSection function array value in the sections.js file-->
+      <section class="step">
+        <div class="title">A Good Investment</div>
+        Private Equity's strategy to buy rent-stabilized apartments means that they sometimes may use illegal and frequently unethical means to get tenants out of the stabilized apartments, since one of the only ways to destabilize an apartment is when there is a vacancy.
+      </section>
+      <section class="step">
+        <div class="title">Emerald Equity in East Harlem</div>
+        But the nature of rent-stabilized apartments means tenants are afforded some extra legal rights, including the ability to form a tenant association.
+      </section>
+      <section class="step">
+        <div class="title">The Portfolio</div>
+        Emerald Equity has just 49 buildings in their portfolio in East Harlem.<br/>
+        The portfolio was originally consolidated in the 80s under Steven Kessner, notorious slumlord. Since then, it has been passed around by various hedgefunds, changes which tenants say were hard to keep track of.
+        <br/>Colloquially, it's known as the Dawnay, Day Portfolio.<br/>
+        <br/>Buildings 1661 Park, 231 E 117, and 322 E 117 already have tenant associations.
+      </section>
+      <section class="step">
+        <div class="title">Emerald Equity Complaints vs All of East Harlem: Totals</div>
+        The complaints made by tenants from Emerald Equity's buildings are just a small picture of tenant distress in East Harlem.
 
- 
-   <body>
-    <div class="container">
-      <ul class="nav justify-content-end">
-<h1>Complaints and Violations in Emerald Equity housing - East Harlem</h1>
-<h2>We are looking at the number and types of complaints and violations in housing stock owned by Emerald Equity in East Harlem. </h2>
-<h3> By Deeksha Kalra,  Georgia Kromrei,  Jack Bai,  Yu-Hsuan (Jessy) </h3>
-<br>
-<h4>Some questions we are looking to answer after observing the data are:
-  <br>
-  1. No. of DOB (Department of Buildings) complaints of the same buildings in East Harlem before and after Emerald Equity owned them 
-  <br>
-  <img src="dob_complaints.png"; alt="Graph" style="width:100%">
-  <br>
-  2. Kinds and amounts of DOB complaints of same buildings in East Harlem before and after Emerald Equity owned them?
-  <br>
-  <img src="DOB_overtime.png"; alt="Graph" style="width:100%">
-  <br>
-3. Kinds of HPD (Housing Preservation and Development) violations before and after Emerald Equity owned them (gas, lead, mold)
-<br>
-<img src="hpd-gas-complaints.png"; alt="Graph" style="width:100%">
-<br>
-<img src="hpd-lead-complaints.png"; alt="Graph" style="width:100%">
-<br>
-<img src="hpd-mold-complaints.png"; alt="Graph" style="width:100%">
-<br>
-4. Percentage of B class ( based on priority of attention needed) violations in Emerald equity-East Harlem buildings compared to the rest of Manhattan? (B class has 5529 violations out of 9391) TK
+        But Emerald Equity only has 49 buildings out of a total 3078 in East Harlem.
 
-<br>
+        </section>
+      <section class="step">
+        <div class="title">Emerald Equity vs East Harlem: Per Unit</div>
+        This is how many complaints per unit Emerald Equity has, compared to the per-unit rate in all of East Harlem.</b>
 
-  </h4>
+        This was found by combining unique BBLs with unitsres from Pluto in both Harlem and Emerald Equity.
+      </section>
+      <section class="step">
+        <div class="title">Class A Violations</div>
+        CLASS "A" NON-HAZARDOUS
+
+        Examples:
+        -No peephole in the entrance door of the dwelling unit;
+        -Keeping of pigeons, chickens, etc. unlawfully;
+        -Improper seat for a water closet;
+        -No street number on the front of the dwelling
+      </section>
+      <section class="step">
+        <div class="title">Class B Violations</div>
+        CLASS "B" HAZARDOUS
+
+        Examples:
+        -Inadequate lighting facilities for public halls or stairs;
+        -Owner has not provided an approved smoke detector in dwelling unit;
+        -Unlawful bars or gates on windows opening to fire escapes
+      </section>
+      <section class="step">
+        <div class="title">Class C Violations</div>
+        CLASS "C" IMMEDIATELY HAZARDOUS
+        
+        Examples:
+        -Inadequate supply of heat and hot water
+        -Rodents
+        -Peeling lead paint in dwellings where a child under 7 resides
+        -Broken or defective plumbing fixtures*
+        -Defective plaster*
+        -Defective faucets
+
+      </section>
+      <section class="step">
+        <div class="title">Categories of HPD Violations</div>
+        Lead, Mold, Gas, Heat, Pests. Lead is shown in Red
+      </section>
     </div>
-  </body>
+    <!--Vis is where the visualization lives-->
+    <div id='vis'>
+    </div>
+    <div id="extra-space">
+    </div>
+  </div>
+</div>
+
+
+<script src="lib/d3.js"></script>
+<script src="js/scroller.js"></script>
+<script src="js/sections.js"></script>
+</body>
 </html>
