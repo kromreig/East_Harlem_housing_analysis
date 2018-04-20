@@ -234,12 +234,14 @@ var scrollVis = function () {
       .attr('class', 'title openvis-title highlight')
       .attr('x', width / 2)
       .attr('y', (height / 3) + (height / 5) )
+      .attr('fill', 'red')
       .text('Life');
 
     g.append('text')
       .attr('class', 'title openvis-title highlight')
       .attr('x', width / 2)
       .attr('y', (height / 3) + (2 * height / 5))
+      .attr('fill', 'red')
       .text('Under Lease');
 
     g.selectAll('.openvis-title')
@@ -365,6 +367,7 @@ var scrollVis = function () {
 
   //per-unit lines
   //********************************************************************************
+  showyAxis(yAxisLine);
 
 g.append('path')
       .classed('pu-line-chart', true)
