@@ -85,12 +85,10 @@ var scrollVis = function () {
     .rangeRound([height, 0]);
 
   var zHPDBarScale = d3.scaleOrdinal()
-    .range(["#999a9b", "#6f7173","#a80000", "#383e3b", "#d4d4d4"]);
+    .range(["#999a9b", "#6f7173","red", "#383e3b", "#d4d4d4"]);
 
-  // When scrolling to a new section
-  // the activation function for that
-  // section is called.
   var activateFunctions = [];
+
   // If a section has an update function
   // then it is called while scrolling
   // through the section with the current
@@ -124,6 +122,7 @@ var scrollVis = function () {
         d.A = +d.A;
         d.B = +d.B;
         d.C = +d.C;
+        d.total = +(d.A+d.B+d.C);
         return d;
 
       });
@@ -235,13 +234,13 @@ var scrollVis = function () {
       .attr('class', 'title openvis-title highlight')
       .attr('x', width / 2)
       .attr('y', (height / 3) + (height / 5) )
-      .text('Rent');
+      .text('Life');
 
     g.append('text')
       .attr('class', 'title openvis-title highlight')
       .attr('x', width / 2)
       .attr('y', (height / 3) + (2 * height / 5))
-      .text('Stabilization');
+      .text('Under Lease');
 
     g.selectAll('.openvis-title')
       .attr('opacity', 0);
@@ -323,8 +322,9 @@ var scrollVis = function () {
     var hpdX = d3.scaleTime().rangeRound([0, width]);
     var hpdY = d3.scaleLinear().rangeRound([height, height/2]);
 
+    hpdYmax= d3.max(hpdClass, function(d) { return (d.total)/3;});
     hpdX.domain(d3.extent(hpdClass, function(d) { return d.date; }));
-    hpdY.domain([0, 15]);
+    hpdY.domain([0, hpdYmax]);
 
     lineHPDA = d3.line()
       .x(function (d){return hpdX(d.date); })
@@ -407,10 +407,10 @@ g.append('path')
       .classed('class-line-chart-B', true)
       .datum(hpdClass)
       .attr("fill", "none")
-      .attr("stroke", "#383e3b")
+      .attr("stroke", "white")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
-      .attr("stroke-width", .75)
+      .attr("stroke-width", .5)
       .attr('d', lineHPDB)
       .attr('opacity', 0);
 
