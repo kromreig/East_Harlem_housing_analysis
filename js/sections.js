@@ -1,4 +1,3 @@
-
 /**
  * scrollVis - encapsulates
  * all the code for the visualization
@@ -102,10 +101,10 @@ var scrollVis = function () {
    */
   var chart = function (selection) {
     selection.each(function (rawData) {
-      
+
       //Some small processing with the other datasets
 
-      otherData.forEach(function (d) { 
+      otherData.forEach(function (d) {
 
         //This is where I parse the "otherData"
         var parseTime = d3.timeParse("%Y-%m-%d");
@@ -186,7 +185,7 @@ var scrollVis = function () {
       var countMax = d3.max(fillerCounts, function (d) { return d.value;});
       xBarScale.domain([0, countMax]);
 
-      
+
       setupVis(wordData, fillerCounts, hpdData, hpdClass, hpdCategorical);
 
       setupSections();
@@ -218,7 +217,7 @@ var scrollVis = function () {
       .attr("class", "x-axis-hpd")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(xHPDBarScale).tickFormat(d3.timeFormat("%Y-%m-%d")))
-      .selectAll("text")  
+      .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
         .attr("dy", ".15em")
@@ -235,17 +234,25 @@ var scrollVis = function () {
 //********************************************************************************
     g.append('text')
       .attr('class', 'title openvis-title highlight')
-      .attr('x', width / 2)
-      .attr('y', (height / 3) + (height / 5) )
+      .attr('x', width / 2.3)
+      .attr('y', (height / 3.5) + (height / 5) )
       .attr('fill', 'red')
       .text('Life');
 
     g.append('text')
       .attr('class', 'title openvis-title highlight')
       .attr('x', width / 2)
-      .attr('y', (height / 3) + (2 * height / 5))
+      .attr('y', (height / 4.7) + (2 * height / 5))
       .attr('fill', 'red')
-      .text('Under Lease');
+      .text('Under');
+
+   g.append('text')
+      .attr('class', 'title openvis-title highlight')
+      .attr('x', width / 1.85)
+      .attr('y', (height / 7.5) + (3 * height / 5))
+      .attr('fill', 'red')
+      .text('Lease');
+
 
     g.selectAll('.openvis-title')
       .attr('opacity', 0);
@@ -254,13 +261,13 @@ var scrollVis = function () {
     g.append('text')
       .attr('class', 'title count-title highlight')
       .attr('x', width / 2)
-      .attr('y', height / 3)
+      .attr('y', (height / 3) + (height / 5))
       .text('49 Buildings');
 
     g.append('text')
       .attr('class', 'sub-title count-title')
       .attr('x', width / 2)
-      .attr('y', (height / 3) + (height / 5))
+      .attr('y', (height / 4.7) + (2 * height / 5))
       .text('in East Harlem');
 
     g.selectAll('.count-title')
@@ -309,7 +316,7 @@ var scrollVis = function () {
     var yPU = d3.scaleLinear().rangeRound([height, 0]);
 
     var maxYPU = d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count);} );
-    
+
     xPU.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
     yPU.domain([0, maxYPU]);
 
@@ -658,7 +665,7 @@ function showPerUnitLine() {
       .duration(0)
       .style('opacity',0)
   }
- 
+
   function showHPDClassA() {
     hidexAxis();
 
@@ -777,7 +784,7 @@ function showHPDClassC() {
       .transition().duration(500)
       .style('opacity', 0);
   }
-  
+
   function hideyAxis() {
     g.selectAll('.y-axis')
       .transition().duration(500)

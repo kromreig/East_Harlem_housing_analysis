@@ -1,4 +1,3 @@
-
 .container {
   width: 2000px;
   background-color: #2b2d42;
@@ -63,7 +62,7 @@
   font-size:80px;
   text-anchor: middle;
   font-family: Saira,"san-serif";
-  fill:#ef233c;
+  fill:#edf2f4;
 }
 
 #vis .sub-title {
@@ -92,4 +91,64 @@
 
 }
 
+/* tell the container's children to float left: */
+.Team > * {
+    float:left;
+    margin-right:10px;
+}
 
+/* this is called a clearfix. it makes sure that the container's children floats are cleared, without using extra markup */
+
+.clearfix {
+    *zoom:1 /* for IE */
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/* end clearfix*/
+
+
+      /*<section class="step">
+        <div class="title">Team</div>
+        <br>
+         <br>
+      </br>
+       <<img src="Team/Georgia.jpg" alt="Mountain View" width="25%" style="float:right;"><a href="https://kromreig.github.io/DataViz_ArchUrbHum/index.html">Georgia Kromrei</a>
+
+        <br> <br>
+        <img src="Team/Georgia.jpg" alt="Mountain View" width="25%" ">
+        <a href="https://deeksha13kalra.github.io/dataVizClassSite/" align = "bottom" >Deeksha Kalra</a>
+        <br><br>
+        <img src="Team/Jessy.jpg" alt="Mountain View" width="25%">
+        <a href="https://youngyang17.github.io/dataVizClassSite/">Yu-Hsuan Yang</a>
+        <br><br>
+        <img src="Team/Jack.jpg" alt="Mountain View" width="25%">
+        <a href="https://yangpire.github.io/Jack-Bai-Website-/index.html">Jack Bai</a>
+
+<!-- Trial -->
+
+<div class="Team">
+   <img src="Team/Georgia.jpg" width=100>
+   <div><a href="https://kromreig.github.io/DataViz_ArchUrbHum/index.html" style="color: #edf2f4">Georgia Kromrei</a></div>
+</div>
+
+<img src="Team/Deeksha.jpg" width=100>
+   <div><a href="https://deeksha13kalra.github.io/dataVizClassSite/">Deeksha Kalra</a></div>
+</div>
+<img src="Team/Jessy.jpg" width=100>
+   <div><a href="https://kromreig.github.io/DataViz_ArchUrbHum/index.html">Yu-Hsuan Yang</a></div>
+</div>
+<img src="Team/Jack.jpg" width=100>
+   <div><a href="https://kromreig.github.io/DataViz_ArchUrbHum/index.html">Georgia Kromrei</a></div>
+</div>
+    
+    
+      </section>*/
