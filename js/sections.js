@@ -61,8 +61,7 @@ var scrollVis = function () {
 
   //AXES AND SCALES FOR FIRST HPD CHART
 
-  var xLineScale = d3.scaleTime()
-    .rangeRound([0, width]);
+  var xLineScale = d3.scaleTime().rangeRound([0, width]);
   var yLineScale = d3.scaleLinear().rangeRound([height, 0]);
   var xAxisLine = d3.axisBottom().scale(xLineScale)
   var yAxisLine = d3.axisLeft().scale(yLineScale)
@@ -207,28 +206,6 @@ var scrollVis = function () {
 
   //axes
   //********************************************************************************
-    g.append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(xAxisBar)
-    g.select('.x-axis').style('opacity', 0);
-
-    g.append("g")
-      .attr("class", "x-axis-hpd")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(xHPDBarScale).tickFormat(d3.timeFormat("%Y-%m-%d")))
-      .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)")
-        .attr('opacity', 0);
-
-     g.append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(xAxisLine)
-    g.select('.x-axis').style('opacity', 0);
 
 //titles
 //********************************************************************************
@@ -604,7 +581,7 @@ g.selectAll(".hpd-bar-heat")
 
 
 function showTotalLine() {
-    showxAxis(xAxisLine);
+
 
     g.selectAll('.square')
       .transition()
@@ -615,34 +592,34 @@ function showTotalLine() {
     g.selectAll('.fill-square')
       .transition()
       .duration(600)
-      .attr('x', 0)
-      .attr('y', function (d, i) {
-        return yBarScale(i % 3) + yBarScale.bandwidth() / 2;
-      })
-      .transition()
-      .duration(0)
       .attr('opacity', 0);
 
     g.selectAll('.line-chart1')
       .datum(hpdData)
-      .attr("d", lineEE)
       .transition()
       .delay(600)
       .duration(800)
+      .attr("d", lineEE)
       .style('opacity',1);
 
     g.selectAll('.line-chart2')
       .datum(hpdData)
-      .attr("d", lineHarlem)
       .transition()
       .delay(600)
       .duration(600)
+      .attr("d", lineHarlem)
       .style('opacity',1)
   }
 
 
 function showPerUnitLine() {
-    showxAxis(xAxisLine);
+    g.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(xLineScale))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
 
     g.selectAll('.line-chart1')
       .datum(hpdData)
@@ -667,8 +644,6 @@ function showPerUnitLine() {
   }
 
   function showHPDClassA() {
-    hidexAxis();
-
 
      g.selectAll('.line-chart1')
       .transition()
@@ -723,7 +698,12 @@ function showHPDClassC() {
 
 
   function showHPDBar() {
-    showxAxis(xHPDAxis);
+    g.selectAll('.x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(xHPDBarScale))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
 
     g.selectAll('.class-line-chart-A')
       .transition()
