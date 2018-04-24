@@ -209,12 +209,19 @@ var scrollVis = function () {
 
 //titles
 //********************************************************************************
-    g.append('text')
-      .attr('class', 'title openvis-title highlight')
-      .attr('x', width / 2.3)
+   g.append('text')
+      .attr('class', 'start-title openvis-title highlight')
+      .attr('x', width / 2.9)
       .attr('y', (height / 3.5) + (height / 5) )
       .attr('fill', 'red')
-      .text('Life');
+      .text('L');
+
+    g.append('text')
+      .attr('class', 'title openvis-title highlight')
+      .attr('x', width / 2.1)
+      .attr('y', (height / 3.5) + (height / 5) )
+      .attr('fill', '#edf2f4')
+      .text('ife');
 
     g.append('text')
       .attr('class', 'title openvis-title highlight')
@@ -234,7 +241,8 @@ var scrollVis = function () {
     g.selectAll('.openvis-title')
       .attr('opacity', 0);
 
-// count filler word count title
+
+          // count filler word count title
     g.append('text')
       .attr('class', 'title count-title highlight')
       .attr('x', width / 2)

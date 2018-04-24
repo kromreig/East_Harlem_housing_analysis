@@ -41,6 +41,7 @@
   background-color: #2b2d42;
 }
 
+
 #extra-space {
   height: 300px;
   background-color: #2b2d42;
@@ -73,6 +74,12 @@
    fill:#edf2f4;
 }
 
+#vis .start-title {
+  font-size:90px;
+  text-anchor: middle;
+  font-family: Saira,"san-serif";
+  fill:#ef233c;
+}
 .x-axis path,
 .x-axis line{
   fill: none;
