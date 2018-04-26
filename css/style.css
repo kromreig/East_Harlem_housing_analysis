@@ -1,6 +1,23 @@
 .container {
   width: 2000px;
   background-color: #2b2d42;
+  position: relative;
+}
+
+.container1 {
+  position: relative;
+  width: 2000px;
+  background-color: #2b2d42;
+  height: 800px;
+  z-index: 100;
+}
+
+.buffer {
+  position: relative;
+  width: 2000px;
+  background-color: #2b2d42;
+  height: 300px;
+  z-index: 100;
 }
 
 
@@ -13,7 +30,7 @@
 #sections {
   position: relative;
   display: inline-block;
-  width: 400px;
+  width: 450px;
   top: 0px;
   z-index: 90;
   padding-bottom: 200px;
@@ -64,6 +81,16 @@
   font-family: Saira,"san-serif";
   fill:#edf2f4;
 }
+
+#map .title{
+  position: absolute;
+  font-size:100px;
+  text-anchor: middle;
+  font-family: Saira,"san-serif";
+  fill:#edf2f4;
+}
+
+
 
 #vis .sub-title {
   font-size:40px;

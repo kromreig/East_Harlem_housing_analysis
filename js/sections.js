@@ -164,6 +164,68 @@ var scrollVis = function () {
       svg.append('g');
 
 
+      //Put the map in a different div. different svg! an external svg! omg!
+
+      d3.xml("myharlemmap.svg").mimeType("image/svg+xml").get(function(error, documentFragment) {
+      if (error) {console.log(error); return;}
+
+      var svgNode = documentFragment.getElementsByTagName("svg")[0];
+
+      document.querySelector('.container1').appendChild(svgNode);
+      
+      var innerSVG = d3.select('.container1').selectAll('svg');
+      console.log(innerSVG);
+
+      innerSVG.append('text')
+      .attr('y', height)
+      .attr('x', width/2)
+      .transition()
+      .delay(1000)
+      .duration(1200)
+      .attr('class', 'title openvis-title highlight')
+      .attr('x', width/2)
+      .attr('y', height/2 )
+      .text('Life')
+      .attr('opacity', .75);
+
+    innerSVG.append('text')
+      .attr('y', height)
+      .attr('x', width/2)
+      .transition()
+      .delay(1000)
+      .duration(2200)
+      .attr('class', 'title openvis-title highlight')
+      .attr('x', width/2)
+      .attr('y', 330)
+      .text('Under')
+      .attr('opacity', .75);
+
+   innerSVG.append('text')
+      .attr('y', height)
+      .attr('x', width/2)
+      .transition()
+      .delay(1000)
+      .duration(4000)
+      .attr('class', 'title openvis-title highlight')
+      .attr('x', 500)
+      .attr('y', 420)
+      .text('Lease')
+      .attr('opacity', .75);
+
+    d3.csv("/data/outputforjack.csv", function(data) {
+  console.log(data[0]);
+
+    innerSVG.selectAll('.building_polygon')
+      .data(data)
+      .on('mouseover', function() {
+            console.log('mouseover');
+            console.log('this', this.id, data[bbl].id);})
+          .on('mouseout', function() {
+            console.log('mouseout');});
+        });
+
+      });
+
       // this group element will be used to contain all
       // other elements.
       g = svg.select('g')
@@ -209,30 +271,6 @@ var scrollVis = function () {
 
 //titles
 //********************************************************************************
-    g.append('text')
-      .attr('class', 'title openvis-title highlight')
-      .attr('x', width / 2.3)
-      .attr('y', (height / 3.5) + (height / 5) )
-      .attr('fill', 'red')
-      .text('Life');
-
-    g.append('text')
-      .attr('class', 'title openvis-title highlight')
-      .attr('x', width / 2)
-      .attr('y', (height / 4.7) + (2 * height / 5))
-      .attr('fill', 'red')
-      .text('Under');
-
-   g.append('text')
-      .attr('class', 'title openvis-title highlight')
-      .attr('x', width / 1.85)
-      .attr('y', (height / 7.5) + (3 * height / 5))
-      .attr('fill', 'red')
-      .text('Lease');
-
-
-    g.selectAll('.openvis-title')
-      .attr('opacity', 0);
 
 // count filler word count title
     g.append('text')
