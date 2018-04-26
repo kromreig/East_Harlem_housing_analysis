@@ -271,8 +271,43 @@ var scrollVis = function () {
 
 //titles
 //********************************************************************************
+<<<<<<< HEAD
+=======
+   g.append('text')
+      .attr('class', 'start-title openvis-title highlight')
+      .attr('x', width / 2.9)
+      .attr('y', (height / 3.5) + (height / 5) )
+      .attr('fill', 'red')
+      .text('L');
 
-// count filler word count title
+    g.append('text')
+      .attr('class', 'title openvis-title highlight')
+      .attr('x', width / 2.1)
+      .attr('y', (height / 3.5) + (height / 5) )
+      .attr('fill', '#edf2f4')
+      .text('ife');
+
+    g.append('text')
+      .attr('class', 'title openvis-title highlight')
+      .attr('x', width / 2)
+      .attr('y', (height / 4.7) + (2 * height / 5))
+      .attr('fill', 'red')
+      .text('Under');
+
+   g.append('text')
+      .attr('class', 'title openvis-title highlight')
+      .attr('x', width / 1.85)
+      .attr('y', (height / 7.5) + (3 * height / 5))
+      .attr('fill', 'red')
+      .text('Lease');
+
+
+    g.selectAll('.openvis-title')
+      .attr('opacity', 0);
+>>>>>>> 20905dd3d4d878d967c6adafce4992dcf6b157f9
+
+
+          // count filler word count title
     g.append('text')
       .attr('class', 'title count-title highlight')
       .attr('x', width / 2)
