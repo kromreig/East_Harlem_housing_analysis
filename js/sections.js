@@ -213,17 +213,21 @@ var scrollVis = function () {
       .attr('opacity', .75);
 
     d3.csv("/data/outputforjack.csv", function(data) {
-  console.log(data[0]);
+    var descr_data=data;
 
     innerSVG.selectAll('.building_polygon')
-      .data(data)
-      .on('mouseover', function() {
-            console.log('mouseover');
-            console.log('this', this.id, data[bbl].id);})
-          .on('mouseout', function() {
-            console.log('mouseout');});
-        });
+      .datum(descr_data)
+      .on("mouseover", function(data){
+            d3.select(this)
+              .style('fill', '#588C73');
+            console.log(this);
+            console.log("here is the DATA matching the SVG map!", data[this.id]['description']);
+        
+            })
+            .on("mouseout", function() { d3.select(this).style('fill', "#ef233c");});
+            });
 
+      var tooltip = innerSVG.append("div").attr("class", "toolTip");
       });
 
       // this group element will be used to contain all

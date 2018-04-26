@@ -83,6 +83,14 @@
   fill:#edf2f4;
 }
 
+#map .building_polygon {
+        fill: #ef233c;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        stroke-width: 0.75px;
+        opacity: 0.85;
+}
+
 #map .title{
   position: absolute;
   font-size:100px;
@@ -90,7 +98,6 @@
   font-family: Saira,"san-serif";
   fill:#edf2f4;
 }
-
 
 
 #vis .sub-title {
