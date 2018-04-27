@@ -796,6 +796,20 @@ g.selectAll(".hpd-bar-gas hpd-bar")
 
 
 function showTotalLine() {
+
+  hidexAxis();
+
+    g.append("line")
+      .transition()
+      .duration(1000)
+      .attr("x1", width/2)
+      .attr("y1", height/2)
+      .attr("x2", width/2 )
+      .attr("y2", height/2 + 100)
+      .attr("stroke-width", 2)
+      .attr("stroke", "white")
+      .attr("opacity", 1);
+
     g.selectAll('.y-axis')
       .transition()
       .duration(800)
@@ -849,6 +863,16 @@ function showTotalLine() {
 
 
 function showPerUnitLine() {
+  hidexAxis();
+
+    g.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(x))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
+
     g.selectAll('.y-axis')
       .transition()
       .duration(800)
