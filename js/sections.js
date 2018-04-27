@@ -244,7 +244,8 @@ var scrollVis = function () {
             words=descr.split(" ");
             x=this.getBBox().x;
             y=this.getBBox().y;
-            r=Math.log(descr.length)*Math.log(descr.length)*1.5
+            if (descr){r=Math.log(descr.length)*Math.log(descr.length)*1.5}
+            else {r = 10};
 
             var getRandomWord = function () {
               index = Math.floor(Math.random() * words.length)
@@ -1389,9 +1390,6 @@ function showDOBAverage() {
 function display(error, portfolio, hpd_harlem, hpd_violations_date_class_resample, hpd_categorical, combined_dob) {
   // create a new plot and
   // display it
-  console.log(portfolio);
-  console.log(hpd_harlem);
-
   var plot = scrollVis();
 
   plot.setOtherData(hpd_harlem, hpd_violations_date_class_resample, hpd_categorical, combined_dob);
