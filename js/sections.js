@@ -218,16 +218,62 @@ var scrollVis = function () {
     innerSVG.selectAll('.building_polygon')
       .datum(descr_data)
       .on("mouseover", function(data){
+        innerSVG.selectAll('.complaint-text')
+                .transition()
+                .duration(800)
+                .attr('opacity', 0);
+        innerSVG.selectAll('.complaint-circle')
+                .transition()
+                .duration(800)
+                .attr('opacity',0);
+
+            descr=descr_data[this.id]['description']
+            words=descr.split(" ");
+            x=this.getBBox().x;
+            y=this.getBBox().y;
+            r=Math.log(descr.length)*Math.log(descr.length)
+
+            var getRandomWord = function () {
+              index = Math.floor(Math.random() * words.length)
+              return words[index];
+            };
+            console.log("x and y", x, y)
             d3.select(this)
-              .style('fill', '#588C73');
-            console.log(this);
-            console.log("here is the DATA matching the SVG map!", data[this.id]['description']);
-        
+              .style('fill', 'white');
+            innerSVG.append('circle')
+              .classed('complaint-circle', true)
+              .attr('cy', y)
+              .attr('cx', x)
+              .attr('r', 1)
+              .attr('fill', 'white')
+              .attr('z-index', 1000)
+              .attr('cx', function() {if (x < 100) { return x+40;} else { return x-40;}})
+              .attr('opacity',.75)
+              .transition()
+              .duration(2000)
+              .attr('cy', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
+              .attr('r', r);
+            console.log("here is the DATA matching the SVG map!", descr);
+
+            innerSVG.append('text')
+              .classed('complaint-text', true)
+              .attr('y', y)
+              .attr('x', x)
+              .attr('font-size', 15)
+              .attr('color', 'red')
+              .attr('text-anchor', 'middle')
+              .transition()
+              .duration(2000)
+              .attr('y', y-y/2)
+              .attr('x', function() {if (x < 100) { return x+40;} else { return x-40;}})
+              .text("..."+getRandomWord()+"...")
             })
-            .on("mouseout", function() { d3.select(this).style('fill', "#ef233c");});
+            .on("mouseout", function() {
+              d3.select(this).style('fill', "#ef233c");
+            });
             });
 
-      var tooltip = innerSVG.append("div").attr("class", "toolTip");
+
       });
 
       // this group element will be used to contain all
@@ -489,14 +535,13 @@ g.selectAll(".hpd-bar-heat")
     // time the active section changes
     activateFunctions[0] = showTitle;
     activateFunctions[1] = showFillerTitle;
-    activateFunctions[2] = showGrid;
-    activateFunctions[3] = highlightGrid;
-    activateFunctions[4] = showTotalLine;
-    activateFunctions[5] = showPerUnitLine;
-    activateFunctions[6] = showHPDClassA;
-    activateFunctions[7] = showHPDClassB;
-    activateFunctions[8] = showHPDClassC;
-    activateFunctions[9] = showHPDBar;
+    activateFunctions[2] = showHighlightGrid;
+    activateFunctions[3] = showTotalLine;
+    activateFunctions[4] = showPerUnitLine;
+    activateFunctions[5] = showHPDClassA;
+    activateFunctions[6] = showHPDClassB;
+    activateFunctions[7] = showHPDClassC;
+    activateFunctions[8] = showHPDBar;
 
   };
 
@@ -543,7 +588,7 @@ g.selectAll(".hpd-bar-heat")
    * shows: square grid
    *
    */
-  function showGrid() {
+  function showHighlightGrid() {
     hidexAxis();
     g.selectAll('.count-title')
       .transition()
@@ -558,18 +603,7 @@ g.selectAll(".hpd-bar-heat")
       })
       .attr('opacity', 1.0)
       .attr('fill', '#ddd');
-  }
 
-  /**
-   * highlightGrid - show fillers in grid
-   *
-   * hides: barchart, text and axis
-   * shows: square grid and highlighted
-   *  filler words. also ensures squares
-   *  are moved back to their place in the grid
-   */
-  function highlightGrid() {
-    hidexAxis();
     g.selectAll('.bar')
       .transition()
       .duration(1500)

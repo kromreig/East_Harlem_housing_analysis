@@ -17,7 +17,7 @@
       <ul class="nav navbar-nav">
         <!-- <li class="active"><a href="#">Background <span class="sr-only">(current)</span></a></li> -->
         <li><a href="#">Background</a></li>
-        <li><a href="#">Data</a></li>
+        <li><a id="linktodata">Data</a></li>
         <li><a href="pages/images.html">Gallery</a></li>
         <li><a href="#">Team</a></li>
         </span></a>
@@ -40,6 +40,7 @@
 <div class="buffer">
 </div>
 <div class="container">
+  <a href="#lintodata"></a>
   <div id='graphic'>
 
   <!--Each section contains the text for each element. You can style these in CSS, which gives a lot of possibilities for telling a story!-->
@@ -56,15 +57,12 @@
       <br/>
       The difference between the depressed, stabilized rents and the market-rate rents is often dramatic.<br/>
         The strategy to buy rent-stabilized apartments means that they sometimes may use illegal and frequently unethical means to get tenants out of the stabilized apartments, since one of the only ways to destabilize an apartment is when there is a vacancy.
-      </section>
-      <section class="step">
-        <div class="title">Tenant Distress: Tenant Unrest</div>
-        But the nature of rent-stabilized apartments means tenants are afforded some extra legal rights, including the ability to form a tenant association.
+        <br/>
+        But rent stabilization means tenants are afforded some extra legal rights, including the ability to form a tenant association.
       </section>
       <section class="step">
         <div class="title">The Portfolio</div>
-        <br/>
-        Emerald Equity has 49 buildings in their portfolio in East Harlem.<br/>
+        Emerald Equity has  <span style="color: red">39 buildings</span> in their portfolio in East Harlem.<br/>
         The portfolio was originally consolidated in the 80s under Steven Kessner, notorious slumlord. Since then, it has been passed around by various hedgefunds, changes which tenants say were hard to keep track of.
         <br/>Colloquially, it's known as the Dawnay, Day Portfolio.<br/>
         <br/>Buildings 1661 Park, 231 E 117, and 322 E 117 already have tenant associations.
@@ -170,10 +168,12 @@
   </div>
 </div>
 
-
 <script src="lib/d3.js"></script>
+<script src="lib/d3-annotation.min.js"></script>
 <script src="js/scroller.js"></script>
 <script src="js/sections.js"></script>
+<script src="lib/d3-annotation.min.js"></script>
+
 
 <!-- Team Descriptions -->
 </body>
