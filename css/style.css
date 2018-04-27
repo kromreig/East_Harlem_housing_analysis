@@ -80,7 +80,7 @@
   font-size:80px;
   text-anchor: middle;
   font-family: Saira,"san-serif";
-  fill:#edf2f4;
+  fill:#ef233c;
 }
 
 #map .building_polygon {
@@ -111,9 +111,8 @@
 #vis .sub-title {
   font-size:40px;
   text-anchor: middle;
-  color:#edf2f4;
+  fill:#edf2f4;
   font-family: Saira,"san-serif";
-   fill:#ef233c;
 }
 
 
