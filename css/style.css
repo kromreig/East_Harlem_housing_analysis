@@ -48,26 +48,6 @@
   text-align: justify;
 }
 
-.bar-long {
-height: 5px;
-background-color: #009ACF;
-width: 0px;
-z-index: 10000;
-position: fixed;
-top: 50px;
-
-}
-
-body {
- height:10000px;
-    
-}
-
-
-.post {
- width:2000px;
-}
-
 /*Narrative title*/
 .title {
   font-family: Saira Semi Condensed,"san-serif";
@@ -140,6 +120,19 @@ body {
   stroke: white;
   stroke-width: 1;
 
+}
+
+.y-axis path,
+.y-axis line {
+  fill: none;
+  stroke: white;
+  stroke-width: 1;
+}
+
+
+.y-axis text{
+  fill: white;
+  font-weight: 100;
 }
 
 .x-axis text{

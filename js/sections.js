@@ -74,14 +74,8 @@ var scrollVis = function () {
     .padding(0.05)
     .align(0.1);
 
-  var xHPDAxis = d3.axisBottom(xHPDBarScale)
-  .tickFormat(d3.timeFormat("%Y"));
-
   var yHPDBarScale = d3.scaleLinear()
     .rangeRound([height, 0]);
-
-  var zHPDBarScale = d3.scaleOrdinal()
-    .range(["red"]);
 
   var activateFunctions = [];
 
@@ -145,12 +139,19 @@ var scrollVis = function () {
       // HPD Line Chart
 
       xLineScale.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
+      yLineScale.domain([0, d3.max(hpdData, function(d) {return +(d.East_Harlem_Count);})])
 
       //HPD BAR CHART
+      formatDate = d3.timeFormat("%Y-%m-%d")
 
       xHPDBarScale.domain(hpdCategorical.map(function(d) { return d.date; }));
       yHPDBarScale.domain([0, d3.max(hpdCategorical, function(d) {return (d.Lead + d.Mold + d.Gas + d.Heat + d.Pests)})]).nice();
-      zHPDBarScale.domain(hpdCategorical.columns.slice(1));
+
+
+      xHPDAxis = d3.axisBottom(xHPDBarScale)
+      .tickFormat(d3.timeFormat("%Y"))
+      .tickValues(xHPDBarScale.domain().filter(function(d,i){ return !(i%5)}));;
+
 
       // create svg and give it a width and height
       svg = d3.select(this).selectAll('svg').data([wordData]);
@@ -358,28 +359,26 @@ var scrollVis = function () {
 
 //Total Harlem/EE Lines
 //********************************************************************************
-    var x = d3.scaleTime().rangeRound([0, width]);
-    var y = d3.scaleLinear().rangeRound([height, 0]);
+    x = d3.scaleTime().rangeRound([0, width]);
+    y = d3.scaleLinear().rangeRound([height, 0]);
 
-
-
-    var maxY = d3.max(hpdData, function(d) { return +(d.East_Harlem_Count*3078);} );
+    var maxY = d3.max(hpdData, function(d) { return +(d.East_Harlem_Count*51170);} );
     x.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
     y.domain([0, maxY]);
 
     lineEE = d3.line()
             .x(function (d){ return x(d.receiveddate);})
-            .y(function (d) { return y((+d.Emerald_Equity_Count)*49);});
+            .y(function (d) { return y((+d.Emerald_Equity_Count)*1449);});
 
     lineHarlem = d3.line()
               .x(function (d) { return x(d.receiveddate);})
-              .y(function (d) { return y((+d.East_Harlem_Count)*3078);});
+              .y(function (d) { return y((+d.East_Harlem_Count)*51170);});
 
 
 //the Per unit lines
 //********************************************************************************
-    var xPU = d3.scaleTime().rangeRound([0, width]);
-    var yPU = d3.scaleLinear().rangeRound([height, 0]);
+    xPU = d3.scaleTime().rangeRound([0, width]);
+    yPU = d3.scaleLinear().rangeRound([height, 0]);
 
     var maxYPU = d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count);} );
 
@@ -395,10 +394,10 @@ var scrollVis = function () {
               .x(function (d) { return xPU(d.receiveddate);})
               .y(function (d) { return yPU(d.East_Harlem_Count);});
 
-//the hpd categorial stacked bar chart
+//the hpd categorial line chart
 //********************************************************************************
-    var hpdX = d3.scaleTime().rangeRound([0, width]);
-    var hpdY = d3.scaleLinear().rangeRound([height, height/2]);
+    hpdX = d3.scaleTime().rangeRound([0, width]);
+    hpdY = d3.scaleLinear().rangeRound([height, height/3]);
 
     hpdYmax= d3.max(hpdClass, function(d) { return (d.total)/3;});
     hpdX.domain(d3.extent(hpdClass, function(d) { return d.date; }));
@@ -441,6 +440,8 @@ var scrollVis = function () {
       .attr('d', lineHarlem)
       .attr('opacity', 0);
 
+
+
 //hpd violation classes
 //********************************************************************************
 
@@ -478,17 +479,17 @@ var scrollVis = function () {
       .attr('d', lineHPDC)
       .attr('opacity', 0);
 
-
+//HPD categorical bar chart
 //*********************************************************************************************
   g.selectAll(".hpd-bar-lead")
     .data(hpdCategorical)
   .enter().append("rect")
-    .classed("hpd-bar-lead hpd-bar", true)
-    .attr("fill", "red")
+    .classed("hpd-bar-gas hpd-bar", true)
+    .attr("fill", "white")
     .attr("width", xHPDBarScale.bandwidth())
     .attr("x", function(d) {return xHPDBarScale(d.date);})
-    .attr("y", function(d) {return yHPDBarScale(d.Lead)- 3*height/4;})
-    .attr("height", function(d) {return +(height- yHPDBarScale(d.Lead));})
+    .attr("y", function(d) {return yHPDBarScale(d.Gas) - 300})
+    .attr("height", function(d) {return +(height- yHPDBarScale(d.Gas));})
     .attr('opacity', 0);
 
 g.selectAll(".hpd-bar-mold")
@@ -498,32 +499,20 @@ g.selectAll(".hpd-bar-mold")
     .attr("fill", "grey")
     .attr("width", xHPDBarScale.bandwidth())
     .attr("x", function(d) {return xHPDBarScale(d.date);})
-    .attr("y", function(d) {return yHPDBarScale(d.Mold) - 2*height/4})
+    .attr("y", function(d) {return yHPDBarScale(d.Mold) - 150;})
     .attr("height", function(d) {return +(height - yHPDBarScale(d.Mold));})
     .attr('opacity', 0);
 
 g.selectAll(".hpd-bar-gas hpd-bar")
     .data(hpdCategorical)
   .enter().append("rect")
-    .classed("hpd-bar-gas hpd-bar", true)
-    .attr("fill", "white")
+    .classed("hpd-bar-lead hpd-bar", true)
+    .attr("fill", "red")
     .attr("width", xHPDBarScale.bandwidth())
     .attr("x", function(d) {return xHPDBarScale(d.date);})
-    .attr("y", function(d) {return yHPDBarScale(d.Gas) - height/4;})
-    .attr("height", function(d) {return +(height - yHPDBarScale(d.Gas));})
+    .attr("y", function(d) {return yHPDBarScale(d.Lead);})
+    .attr("height", function(d) {return +(height - yHPDBarScale(d.Lead));})
     .attr('opacity', 0);
-
-g.selectAll(".hpd-bar-heat")
-    .data(hpdCategorical)
-  .enter().append("rect")
-    .classed("hpd-bar-heat hpd-bar", true)
-    .attr("fill", "black")
-    .attr("width", xHPDBarScale.bandwidth())
-    .attr("x", function(d) {return xHPDBarScale(d.date);})
-    .attr("y", function(d) {return yHPDBarScale(d.Heat)})
-    .attr("height", function(d) {return +(height - yHPDBarScale(d.Heat));})
-    .attr('opacity', 0);
-
 
 
 };
@@ -654,10 +643,20 @@ g.selectAll(".hpd-bar-heat")
       .transition()
       .duration(0)
       .style('opacity',0);
+
+    g.selectAll('.y-axis')
+      .transition()
+      .duration(0)
+      .style('opacity', 0);
   }
 
 
 function showTotalLine() {
+    g.selectAll('.y-axis')
+      .transition()
+      .duration(800)
+      .style('opacity', 0);
+
     g.selectAll('.square')
       .transition()
       .delay(0)
@@ -668,6 +667,23 @@ function showTotalLine() {
       .transition()
       .duration(600)
       .attr('opacity', 0);
+
+    g.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(x))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
+
+    g.append('g')
+      .attr('class', 'y-axis')
+      .transition()
+      .duration(800)
+      .call(d3.axisLeft(y))
+    g.select('.y-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
 
     g.selectAll('.line-chart1')
       .datum(hpdData)
@@ -688,13 +704,10 @@ function showTotalLine() {
 
 
 function showPerUnitLine() {
-    g.append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(xLineScale))
-    g.select('.x-axis')
-      .style('fill', 'white')
-      .style('opacity', 1);
+    g.selectAll('.y-axis')
+      .transition()
+      .duration(800)
+      .call(d3.axisLeft(yPU));
 
     g.selectAll('.line-chart1')
       .datum(hpdData)
@@ -719,6 +732,27 @@ function showPerUnitLine() {
   }
 
   function showHPDClassA() {
+    hidexAxis();
+
+    g.selectAll('.y-axis')
+      .transition()
+      .duration(0)
+      .style('opacity', 0);
+
+    g.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(hpdX))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
+
+    g.append('g')
+      .attr('class', 'y-axis')
+      .call(d3.axisLeft(hpdY))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
 
      g.selectAll('.line-chart1')
       .transition()
@@ -758,6 +792,15 @@ function showHPDClassB() {
   }
 
 function showHPDClassC() {
+    hidexAxis();
+
+    g.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(hpdX))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
 
     g.selectAll('.class-line-chart-C')
       .transition()
@@ -773,9 +816,12 @@ function showHPDClassC() {
 
 
   function showHPDBar() {
-    g.selectAll('.x-axis')
+    hidexAxis();
+
+    g.append('g')
+      .classed('x-axis', true)
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(xHPDBarScale))
+      .call(xHPDAxis)
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
@@ -799,11 +845,6 @@ function showHPDClassC() {
       .transition()
       .duration(800)
       .style('opacity',1);
-
-    g.selectAll('.x-axis-hpd')
-      .transition()
-      .duration(800)
-      .style('opacity',1)
 
   }
 
@@ -836,13 +877,13 @@ function showHPDClassC() {
    */
   function hidexAxis() {
     g.selectAll('.x-axis')
-      .transition().duration(500)
+      .transition().duration(0)
       .style('opacity', 0);
   }
 
   function hideyAxis() {
     g.selectAll('.y-axis')
-      .transition().duration(500)
+      .transition().duration(0)
       .style('opacity', 0);
   }
 
