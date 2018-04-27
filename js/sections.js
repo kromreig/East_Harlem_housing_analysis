@@ -1036,14 +1036,14 @@ function showDOBTotal() {
     g.append("text")
       .attr("opacity", 0)
       .classed("annotation", true)
-      .transition()
-      .duration(1000)
       .attr("text-anchor", "middle")
       .attr("x", width/2 + 140)
       .attr("y", height/4-40)
       .attr("font-size", 20)
       .attr("fill", "white")
       .text("Emerald Equity Purchases 49 Buildings")
+      .transition()
+      .duration(1000)
       .attr("opacity", 1);
 
     g.append("line")
