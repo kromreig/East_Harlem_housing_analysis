@@ -1049,14 +1049,14 @@ function showDOBTotal() {
     g.append("line")
       .classed("annotation", true)
       .attr("opacity", 0)
-      .transition()
-      .duration(1000)
       .attr("x1", width/2 + 140)
       .attr("y1", height-50)
       .attr("x2", width/2 + 140)
       .attr("y2", height/5)
       .attr("stroke-width", .25)
       .attr("stroke", "white")
+      .transition()
+      .duration(1000)
       .attr("opacity", 1);
 
     g.selectAll('.class-line-chart-A')
