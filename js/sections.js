@@ -212,7 +212,7 @@ var scrollVis = function () {
       .text('Lease')
       .attr('opacity', .75);
 
-    d3.csv("/data/outputforjack.csv", function(data) {
+    d3.csv("data/outputforjack.csv", function(data) {
     var descr_data=data;
 
     innerSVG.selectAll('.building_polygon')
@@ -253,7 +253,7 @@ var scrollVis = function () {
               .duration(2000)
               .attr('cy', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
               .attr('r', r);
-            console.log("here is the DATA matching the SVG map!", descr);
+            console.log("DATA FROM:", descr);
 
             innerSVG.append('text')
               .classed('complaint-text', true)
@@ -264,7 +264,7 @@ var scrollVis = function () {
               .attr('text-anchor', 'middle')
               .transition()
               .duration(2000)
-              .attr('y', y-y/2)
+              .attr('y', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
               .attr('x', function() {if (x < 100) { return x+40;} else { return x-40;}})
               .text("..."+getRandomWord()+"...")
             })
@@ -658,8 +658,6 @@ g.selectAll(".hpd-bar-heat")
 
 
 function showTotalLine() {
-
-
     g.selectAll('.square')
       .transition()
       .delay(0)
