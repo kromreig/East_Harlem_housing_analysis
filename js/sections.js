@@ -215,15 +215,25 @@ var scrollVis = function () {
 
   innerSVG.append('text')
       .attr('y', height)
-      .attr('x', width/2)
+      .attr('x', width/2+20)
+      .classed('sub-title', true)
       .transition()
       .delay(1000)
       .duration(4000)
-      .attr('class', 'sub-title openvis-title')
-      .attr('x', width/1)
-      .attr('y', height/0.8)
-      .text('"They offered us money to move to Bronx. The same person has knocked on my door 6 times since Christmas..." ~ Edgar Gonzaga')
-      .attr('opacity', 100);
+      .attr('y', height+235)
+      .text('"They offered us money to move to Bronx.')
+      .attr('opacity', 1);
+
+  innerSVG.append('text')
+      .attr('y', height)
+      .attr('x', width+20)
+      .classed('sub-title', true)
+      .transition()
+      .delay(1000)
+      .duration(4000)
+      .attr('y', height+272)
+      .text('The same person has knocked on my door 6 times since Christmas..." ~ Edgar Gonzaga')
+      .attr('opacity', 1);
 
     d3.csv("data/outputforjack.csv", function(data) {
     var descr_data=data;
