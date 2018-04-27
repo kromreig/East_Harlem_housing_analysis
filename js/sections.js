@@ -177,7 +177,7 @@ var scrollVis = function () {
       var innerSVG = d3.select('.container1').selectAll('svg');
       console.log(innerSVG);
 
-      innerSVG.append('text')
+  innerSVG.append('text')
       .attr('y', height)
       .attr('x', width/2)
       .transition()
@@ -196,8 +196,8 @@ var scrollVis = function () {
       .delay(1000)
       .duration(2200)
       .attr('class', 'title openvis-title highlight')
-      .attr('x', width/2)
-      .attr('y', 330)
+      .attr('x', width/1.7)
+      .attr('y', height/1.5)
       .text('Under')
       .attr('opacity', .75);
 
@@ -208,10 +208,22 @@ var scrollVis = function () {
       .delay(1000)
       .duration(4000)
       .attr('class', 'title openvis-title highlight')
-      .attr('x', 500)
-      .attr('y', 420)
+      .attr('x', width/1.4)
+      .attr('y', height/1.2)
       .text('Lease')
       .attr('opacity', .75);
+
+  innerSVG.append('text')
+      .attr('y', height)
+      .attr('x', width/2)
+      .transition()
+      .delay(1000)
+      .duration(4000)
+      .attr('class', 'sub-title openvis-title')
+      .attr('x', width/1)
+      .attr('y', height/0.8)
+      .text('"They offered us money to move to Bronx. The same person has knocked on my door 6 times since Christmas..." ~ Edgar Gonzaga')
+      .attr('opacity', 100);
 
     d3.csv("data/outputforjack.csv", function(data) {
     var descr_data=data;
@@ -227,7 +239,7 @@ var scrollVis = function () {
                 .transition()
                 .delay(2000)
                 .attr('opacity',0);
-
+        
             descr=descr_data[this.id]['description']
             words=descr.split(" ");
             x=this.getBBox().x;
@@ -268,7 +280,8 @@ var scrollVis = function () {
               .attr('y', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
               .attr('x', function() {if (x < 100) { return x+40;} else { return x-40;}})
               .text("..."+getRandomWord()+"...")
-            })
+
+                      })
             .on("mouseout", function() {
               d3.select(this).style('fill', "#ef233c");
             });
