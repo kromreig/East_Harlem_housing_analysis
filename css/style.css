@@ -117,12 +117,29 @@
 }
 
 
-#vis .start-title {
-  font-size:90px;
-  text-anchor: middle;
+#vis .quotes-title {
+  font-size:22px;
+  text-anchor: left;
   font-family: Saira,"san-serif";
   fill:#ef233c;
 }
+
+#vis .author-title {
+  font-size:16px;
+  text-anchor: left;
+  font-family: Saira,"san-serif";
+  fill:#ef233c;
+}
+
+#vis .start-title {
+  font-size:80px;
+  text-anchor: left;
+  font-family: Saira,"san-serif";
+  fill:#ef233c;
+}
+
+
+
 .x-axis path,
 .x-axis line{
   fill: none;

@@ -213,27 +213,7 @@ var scrollVis = function () {
       .text('Lease')
       .attr('opacity', .75);
 
-  innerSVG.append('text')
-      .attr('y', height)
-      .attr('x', width/2+20)
-      .classed('sub-title', true)
-      .transition()
-      .delay(1000)
-      .duration(4000)
-      .attr('y', height+235)
-      .text('"They offered us money to move to Bronx.')
-      .attr('opacity', 1);
 
-  innerSVG.append('text')
-      .attr('y', height)
-      .attr('x', width+20)
-      .classed('sub-title', true)
-      .transition()
-      .delay(1000)
-      .duration(4000)
-      .attr('y', height+272)
-      .text('The same person has knocked on my door 6 times since Christmas..." ~ Edgar Gonzaga')
-      .attr('opacity', 1);
 
     d3.csv("data/outputforjack.csv", function(data) {
     var descr_data=data;
@@ -346,6 +326,88 @@ var scrollVis = function () {
 //titles
 //********************************************************************************
 
+// Quote 1
+g.append('text')
+      .attr('class', 'start-title openvis-title')
+      .attr('x', -60)
+      .attr('y', 100)
+      .attr('fill', 'red')
+      .text('"');
+
+    g.append('text')
+      .attr('class', 'quotes-title openvis-title')
+      .attr('x', -40)
+      .attr('y', 100)
+      .attr('fill', 'red')
+      .text('They offered us money to move to Bronx. The same person  ');
+
+      g.append('text')
+      .attr('class', 'quotes-title openvis-title')
+      .attr('x', -40)
+      .attr('y', 140)
+      .attr('fill', 'red')
+      .text('has knocked on my door 6 times since Christmas...');
+
+      g.append('text')
+      .attr('class', 'start-title openvis-title')
+      .attr('x', 570)
+      .attr('y', 170)
+      .attr('fill', 'red')
+      .text('"');
+
+      g.append('text')
+      .attr('class', 'author-title openvis-title')
+      .attr('x', 420)
+      .attr('y', 170)
+      .attr('fill', 'white')
+      .text('~Edgar Gonzaga (tenant)');
+
+      g.append('text')
+      .attr('class', 'start-title openvis-title')
+      .attr('x', -60)
+      .attr('y', 100)
+      .attr('fill', 'red')
+      .text('"');
+
+// Quote 2
+g.append('text')
+      .attr('class', 'start-title openvis-title')
+      .attr('x', -60)
+      .attr('y', 450)
+      .attr('fill', 'red')
+      .text('"');
+
+    g.append('text')
+      .attr('class', 'quotes-title openvis-title')
+      .attr('x', -40)
+      .attr('y', 450)
+      .attr('fill', 'red')
+      .text('They asked me to leave. But I have lived in this apartment');
+
+      g.append('text')
+      .attr('class', 'quotes-title openvis-title')
+      .attr('x', -40)
+      .attr('y', 490)
+      .attr('fill', 'red')
+      .text('for 20 years, this is my home...');
+
+      g.append('text')
+      .attr('class', 'start-title openvis-title')
+      .attr('x', 570)
+      .attr('y', 520)
+      .attr('fill', 'red')
+      .text('"');
+
+      g.append('text')
+      .attr('class', 'author-title openvis-title')
+      .attr('x', 400)
+      .attr('y', 520)
+      .attr('fill', 'white')
+      .text('~Guillermina Carche (tenant)');
+
+
+    g.selectAll('.openvis-title')
+      .attr('opacity', 0);
 
           // count filler word count title
     g.append('text')
