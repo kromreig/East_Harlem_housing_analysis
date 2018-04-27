@@ -1,3 +1,6 @@
+body {background-color: #2b2d42;}
+
+
 .container {
   width: 2000px;
   background-color: #2b2d42;
@@ -8,6 +11,7 @@
   position: relative;
   width: 2000px;
   background-color: #2b2d42;
+  padding-left: 140px;
   height: 800px;
   z-index: 100;
 }
@@ -30,10 +34,11 @@
 #sections {
   position: relative;
   display: inline-block;
-  width: 450px;
+  width: 500px;
   top: 0px;
   z-index: 90;
   padding-bottom: 200px;
+  padding-left: 80px;
   background-color: #2b2d42;
 }
 
@@ -105,6 +110,13 @@
   text-anchor: middle;
   font-family: Saira,"san-serif";
   fill:#ef233c;
+}
+
+.annotation{
+  font-family: Saira,"san-serif";
+  font-size: 18px;
+  text-anchor: middle;
+  stroke-width: 1;
 }
 
 

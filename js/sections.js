@@ -190,36 +190,36 @@ var scrollVis = function () {
 
   innerSVG.append('text')
       .attr('y', height)
-      .attr('x', width/2)
+      .attr('x', width/2+40)
       .transition()
       .delay(1000)
       .duration(1200)
       .attr('class', 'title openvis-title highlight')
-      .attr('x', width/2)
+      .attr('x', width/2+40)
       .attr('y', height/2 )
       .text('Life')
       .attr('opacity', .75);
 
     innerSVG.append('text')
       .attr('y', height)
-      .attr('x', width/2)
+      .attr('x', width/2+40)
       .transition()
       .delay(1000)
       .duration(2200)
       .attr('class', 'title openvis-title highlight')
-      .attr('x', width/1.7)
+      .attr('x', width/1.7+40)
       .attr('y', height/1.5)
       .text('Under')
       .attr('opacity', .75);
 
    innerSVG.append('text')
       .attr('y', height)
-      .attr('x', width/2)
+      .attr('x', width/2+40)
       .transition()
       .delay(1000)
       .duration(4000)
       .attr('class', 'title openvis-title highlight')
-      .attr('x', width/1.4)
+      .attr('x', width/1.4+40)
       .attr('y', height/1.2)
       .text('Lease')
       .attr('opacity', .75);
@@ -261,7 +261,7 @@ var scrollVis = function () {
               .attr('r', 1)
               .attr('fill', 'white')
               .attr('z-index', 1000)
-              .attr('cx', function() {if (x < 100) { return x+40;} else { return x-40;}})
+              .attr('cx', function() {if (x < 100) { return x+120;} else { return x-40;}})
               .attr('opacity',.75)
               .transition()
               .duration(2000)
@@ -279,7 +279,7 @@ var scrollVis = function () {
               .transition()
               .duration(2000)
               .attr('y', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
-              .attr('x', function() {if (x < 100) { return x+40;} else { return x-40;}})
+              .attr('x', function() {if (x < 100) { return x+120;} else { return x-40;}})
               .text("..."+getRandomWord()+"...")
 
                       })
@@ -711,6 +711,11 @@ g.selectAll(".hpd-bar-gas hpd-bar")
       .transition()
       .duration(600)
       .attr('opacity', 1.0);
+
+    g.selectAll(".annotation")
+    .transition()
+    .duration(0)
+    .attr("opacity", 0);
   }
 
   /**
@@ -792,6 +797,11 @@ g.selectAll(".hpd-bar-gas hpd-bar")
       .transition()
       .duration(0)
       .style('opacity', 0);
+
+    g.selectAll(".annotation")
+    .transition()
+    .duration(0)
+    .attr("opacity", 0);
   }
 
 
@@ -799,14 +809,29 @@ function showTotalLine() {
 
   hidexAxis();
 
-    g.append("line")
+  g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
       .transition()
       .duration(1000)
-      .attr("x1", width/2)
-      .attr("y1", height/2)
-      .attr("x2", width/2 )
-      .attr("y2", height/2 + 100)
-      .attr("stroke-width", 2)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 70)
+      .attr("y", height/4-40)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("Emerald Equity Purchases 49 Buildings")
+      .attr("opacity", 1);
+
+    g.append("line")
+      .classed("annotation", true)
+      .attr("opacity", 0)
+      .transition()
+      .duration(1000)
+      .attr("x1", width/2 + 80)
+      .attr("y1", height-50)
+      .attr("x2", width/2 + 80)
+      .attr("y2", height/5)
+      .attr("stroke-width", .25)
       .attr("stroke", "white")
       .attr("opacity", 1);
 
@@ -865,6 +890,11 @@ function showTotalLine() {
 function showPerUnitLine() {
   hidexAxis();
 
+  g.selectAll(".annotation")
+    .transition()
+    .duration(500)
+    .attr("opacity", 0);
+
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
@@ -875,7 +905,7 @@ function showPerUnitLine() {
 
     g.selectAll('.y-axis')
       .transition()
-      .duration(800)
+      .duration(1200)
       .call(d3.axisLeft(yPU));
 
     g.selectAll('.line-chart1')
@@ -883,7 +913,7 @@ function showPerUnitLine() {
       .transition()
       .attr("d", line1)
       .delay(600)
-      .duration(600)
+      .duration(1000)
       .style('opacity',1);
 
     g.selectAll('.line-chart2')
@@ -891,7 +921,7 @@ function showPerUnitLine() {
       .transition()
       .attr("d", line2)
       .delay(600)
-      .duration(600)
+      .duration(1000)
       .style('opacity',1);
 
     g.selectAll('.class-line-chart-A')
@@ -962,6 +992,10 @@ function showHPDClassB() {
 
 function showHPDClassC() {
     hidexAxis();
+    g.selectAll(".annotation")
+    .transition()
+    .duration(0)
+    .attr("opacity", 0);
 
     g.append('g')
       .attr('class', 'x-axis')
@@ -971,19 +1005,29 @@ function showHPDClassC() {
       .style('fill', 'white')
       .style('opacity', 1);
 
-    g.selectAll('.class-line-chart-C')
+    g.selectAll('.class-line-chart-B')
       .transition()
       .duration(800)
+      .style('opacity',.5);
+
+    g.selectAll('.class-line-chart-A')
+      .transition()
+      .duration(800)
+      .style('opacity',.5);
+
+    g.selectAll('.class-line-chart-C')
+      .transition()
+      .duration(1000)
       .style('opacity',1);
 
     g.selectAll('.dob-line-1')
       .transition()
-      .duration(800)
+      .duration(0)
       .style('opacity', 0);
 
     g.selectAll('.dob-line-2')
       .transition()
-      .duration(800)
+      .duration(0)
       .style('opacity',0);
 
   }
@@ -991,6 +1035,32 @@ function showHPDClassC() {
 function showDOBTotal() {
     hidexAxis();
     hideyAxis();
+
+    g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .transition()
+      .duration(1000)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 140)
+      .attr("y", height/4-40)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("Emerald Equity Purchases 49 Buildings")
+      .attr("opacity", 1);
+
+    g.append("line")
+      .classed("annotation", true)
+      .attr("opacity", 0)
+      .transition()
+      .duration(1000)
+      .attr("x1", width/2 + 140)
+      .attr("y1", height-50)
+      .attr("x2", width/2 + 140)
+      .attr("y2", height/5)
+      .attr("stroke-width", .25)
+      .attr("stroke", "white")
+      .attr("opacity", 1);
 
     g.selectAll('.class-line-chart-A')
       .transition()
@@ -1044,6 +1114,10 @@ function showDOBTotal() {
 function showDOBAverage() {
 
   hideyAxis();
+  g.selectAll(".annotation")
+    .transition()
+    .duration(500)
+    .attr("opacity", 0);
 
   g.append('g')
       .attr('class', 'y-axis')
@@ -1076,6 +1150,72 @@ function showDOBAverage() {
   function showHPDBar() {
     hidexAxis();
     hideyAxis();
+
+    g.selectAll(".annotation")
+    .transition()
+    .duration(500)
+    .attr("opacity", 0);
+
+     g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .transition()
+      .duration(1000)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 125)
+      .attr("y", height/5-60)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("Emerald Equity Purchases 49 Buildings")
+      .attr("opacity", 1);
+
+    g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .transition()
+      .duration(1000)
+      .attr("x", width-15)
+      .attr("y", height-40)
+      .attr("fill", "white")
+      .text("Lead")
+      .attr("opacity", 1);
+
+    g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .transition()
+      .duration(1000)
+      .attr("x", width-15)
+      .attr("y", height-170)
+      .attr("fill", "white")
+      .text("Mold")
+      .attr("opacity", 1);
+
+    g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .transition()
+      .duration(1000)
+      .attr("x", width-8)
+      .attr("y", height-320)
+      .attr("fill", "white")
+      .text("Gas")
+      .attr("opacity", 1);
+
+
+
+    g.append("line")
+      .classed("annotation", true)
+      .attr("opacity", 0)
+      .transition()
+      .duration(1000)
+      .attr("x1", width/2 + 135)
+      .attr("y1", height-50)
+      .attr("x2", width/2 + 135)
+      .attr("y2", height/5-45)
+      .attr("stroke-width", .25)
+      .attr("stroke", "white")
+      .attr("opacity", 1);
 
      g.selectAll('.dob-line-1')
       .transition()
