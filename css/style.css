@@ -119,14 +119,23 @@ body {
   fill:#edf2f4;
 }
 
+#map .sub-title{
+  position: absolute;
+  font-size:14px;
+  text-anchor: middle;
+  font-family: Saira,"san-serif";
+  fill:#ef233c;
+}
+
 
 #vis .sub-title {
   font-size:40px;
   text-anchor: middle;
   color:#edf2f4;
   font-family: Saira,"san-serif";
-   fill:#edf2f4;
+   fill:#ef233c;
 }
+
 
 #vis .start-title {
   font-size:90px;
