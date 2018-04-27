@@ -220,18 +220,18 @@ var scrollVis = function () {
       .on("mouseover", function(data){
         innerSVG.selectAll('.complaint-text')
                 .transition()
-                .duration(800)
+                .delay(2000)
                 .attr('opacity', 0);
         innerSVG.selectAll('.complaint-circle')
                 .transition()
-                .duration(800)
+                .delay(2000)
                 .attr('opacity',0);
 
             descr=descr_data[this.id]['description']
             words=descr.split(" ");
             x=this.getBBox().x;
             y=this.getBBox().y;
-            r=Math.log(descr.length)*Math.log(descr.length)
+            r=Math.log(descr.length)*Math.log(descr.length)*1.5
 
             var getRandomWord = function () {
               index = Math.floor(Math.random() * words.length)
