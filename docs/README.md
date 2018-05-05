@@ -108,6 +108,28 @@ The SQL queries we used to pull data out of nyc-db are found in queries.sql.
 
 This was done in Jupyter Notebook using Pandas, and Matplotlib for the exploratory data analysis.
 
+## Design Evolution
+
+We decided early on to use Slack for our design, so that we could communicate without being face-to-face, and accommodate our busy and often conflicting schedules, as this was an interdisciplinary group!
+
+![](Slack1.png)
+
+We knew early on we wanted transitions!
+
+![](IMG_20180402_114310.jpg)
+
+![](transitions.jpg)
+
+We also made decisions like having a dark background, and a color scheme that we thought was vibrant, yet still sober enough for the subject matter.
+
+![](grey+white.png)
+![](navigation.png)
+![](Slack2.png)
+
+We drew many pictures on whiteboards.
+
+![](whiteboard.png)
+
 ## Comprehensive list of tech used:
 
 Data Source: https://github.com/aepyornis/nyc-db
