@@ -1,24 +1,26 @@
 body {background-color: #2b2d42;}
 
 
-.container {
-  width: 2000px;
+.column {
+  width: 890px;
   background-color: #2b2d42;
   position: relative;
+  padding: 80px 10px;
 }
 
 .container1 {
   position: relative;
-  width: 2000px;
+  display: inline-block;
+  width: 450px;
   background-color: #2b2d42;
-  padding-left: 140px;
+  padding-left: 0px;
   height: 800px;
   z-index: 100;
 }
 
 .buffer {
   position: relative;
-  width: 2000px;
+  width: 900px;
   background-color: #2b2d42;
   height: 300px;
   z-index: 100;
@@ -34,11 +36,11 @@ body {background-color: #2b2d42;}
 #sections {
   position: relative;
   display: inline-block;
-  width: 500px;
+  width: 350px;
   top: 0px;
   z-index: 90;
   padding-bottom: 200px;
-  padding-left: 80px;
+  padding-left: -100px;
   background-color: #2b2d42;
 }
 
@@ -187,30 +189,5 @@ body {background-color: #2b2d42;}
   stroke-width: 4px;
 
 }
-
-/* tell the container's children to float left: */
-.float-my-children > * {
-    float:left;
-    margin-right:8px;
-}
-
-/* this is called a clearfix. it makes sure that the container's children floats are cleared, without using extra markup */
-
-.clearfix {
-    *zoom:1 /* for IE */
-}
-
-.clearfix:before,
-.clearfix:after {
-    content: " ";
-    display: table;
-}
-
-.clearfix:after {
-    clear: both;
-}
-
-/* end clearfix*/
-
 
       

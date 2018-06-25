@@ -10,55 +10,45 @@ var scrollVis = function () {
 
   var width = 600;
   var height = 520;
-  var margin = { top: 0, left: 100, bottom: 40, right: 10 };
+  var margin = { top: 0,
+    left: 100,
+    bottom: 40,
+    right: 10 };
 
-  // Keep track of which visualization
-  // we are on and which was the last
-  // index activated. When user scrolls
-  // quickly, we want to call all the
-  // activate functions that they pass.
   var lastIndex = -1;
   var activeIndex = 0;
 
   // Sizing for the grid visualization
-  var squareSize = 10;
+  var squareSize = 8;
   var squarePad = 2;
-  var numPerRow = width / (squareSize + squarePad);
+  var numPerRow = width / squareSize + squarePad;
 
-  // main svg used for visualization
   var svg = null;
-
-  // d3 selection that will be used
-  // for displaying visualizations
   var g = null;
 
-  // We will set the domain when the
-  // data is processed.
-  // @v4 using new scale names
   var xBarScale = d3.scaleLinear()
     .range([0, width]);
 
-  // The bar chart display is horizontal
-  // so we can use an ordinal scale
-  // to get width and y locations.
-  // @v4 using new scale type
-  // Color is determined just by the index of the bars
   var barColors = { 0: '#008080', 1: '#399785', 2: '#5AAF8C' };
 
-  //Lines for DOB Line Chart
-
+  //Scales for DOB Line Chart
 
   xDOBLineScale = d3.scaleTime().range([0, width]);
   yDOBLineScale = d3.scaleLinear().rangeRound([height, 0]);
   yDOBAvgLineScale = d3.scaleLinear().rangeRound([height, 0]);
   
 
-  //AXES AND SCALES FOR FIRST HPD LINE CHART
+  //SCALES FOR FIRST HPD LINE CHART
 
   var xLineScale = d3.scaleTime().rangeRound([0, width]);
   var yLineScale = d3.scaleLinear().rangeRound([height, 0]);
 
-  //AXES AND SCALES FOR HPD BAR CHART
+  //SCALES FOR HPD LITIGATION LINE CHART
+
+  var xLitigLineScale = d3.scaleTime().rangeRound([0, width]);
+  var yLitigLineScale = d3.scaleLinear().rangeRound([height, 0]);
+
+  //SCALES FOR HPD BAR CHART
 
   var xHPDBarScale = d3.scaleBand()
     .rangeRound([0, width])
@@ -124,13 +114,19 @@ var scrollVis = function () {
       otherData4.forEach(function (d) {
         var parseTime = d3.timeParse("%Y-%m-%d");
         d.date = parseTime(d.inspectiondate);
-        d.emerald_equity_total = +d.emerald_equity_total;
-        d.Emerald_Equity_avg = +d.Emerald_Equity_avg;
-        d.harlem_total = +d.harlem_total;
-        d.East_Harlem_avg = +d.East_Harlem_avg;
+        d.emerald_equity_total = +d.summed;
+        d.harlem_total = +d.summed_harlem;
         return d;
-        console.log("HERE, EE", d.Emerald_Equity_avg, d.emerald_equity_total);
       });
+
+      otherData5.forEach(function (d) {
+        var parseTime = d3.timeParse("%Y-%m-%d");
+        d.caseopendate = parseTime(d.caseopendate);
+        d.count_harlem = +d.count;
+        d.count_emerald = +d.count_ee;
+        return d;
+      });
+
 
 
       //Here's the various data.
@@ -138,34 +134,40 @@ var scrollVis = function () {
       hpdClass = otherData2;
       hpdCategorical = otherData3;
       combinedDob = otherData4;
+      hpdLit = otherData5;
+
+      console.log(hpdLit)
 
 
       // HPD Line Chart
 
-      xLineScale.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
-      yLineScale.domain([0, d3.max(hpdData, function(d) {return +(d.East_Harlem_Count);})])
+      xLineScale.domain(d3.extent(hpdData, function(d){ return d.receiveddate; }));
+      yLineScale.domain([0, d3.max(hpdData, function(d){ return +(d.East_Harlem_Count);})])
 
       //HPD BAR CHART
       formatDate = d3.timeFormat("%Y-%m-%d")
 
-      xHPDBarScale.domain(hpdCategorical.map(function(d) { return d.date; }));
-      yHPDBarScale.domain([0, d3.max(hpdCategorical, function(d) {return (d.Lead + d.Mold + d.Gas + d.Heat + d.Pests)})]).nice();
+      xHPDBarScale.domain(hpdCategorical.map(function(d){ return d.date; }));
+      yHPDBarScale.domain([0, d3.max(hpdCategorical, function(d){ return (d.Lead + d.Mold + d.Gas + d.Heat + d.Pests)})]).nice();
 
 
       xHPDAxis = d3.axisBottom(xHPDBarScale)
       .tickFormat(d3.timeFormat("%Y"))
-      .tickValues(xHPDBarScale.domain().filter(function(d,i){ return !(i%5)}));;
+      .tickValues(xHPDBarScale.domain().filter(function(d,i){ return !(i%5)}));
+
+      //HPD Litig Line: scale it to the data
+
+      xLitigLineScale.domain(d3.extent(hpdLit, function(d){ return d.caseopendate;}));
+      yLitigLineScale.domain([0, d3.max(hpdLit, function(d){ return +(d.count_harlem);})]);
 
       //DOB Line Chart: scale it to your data!
 
-      xDOBLineScale.domain(d3.extent(combinedDob, function(d) {return d.date; }));
-      yDOBLineScale.domain([0, d3.max(combinedDob, function(d) {return +d.harlem_total })]);
-      yDOBAvgLineScale.domain([0, d3.max(combinedDob, function(d) {return +d.Emerald_Equity_avg })]);
-      
-      
+      xDOBLineScale.domain(d3.extent(combinedDob, function(d){ return d.date; }));
+      yDOBLineScale.domain([0, d3.max(combinedDob, function(d){ return +d.harlem_total })]);
+      yDOBAvgLineScale.domain([0, d3.max(combinedDob, function(d){ return +d.emerald_equity_total/1449 * 1000 })]);
 
       // create svg and give it a width and height
-      svg = d3.select(this).selectAll('svg').data([wordData]);
+      svg = d3.select(this).selectAll('svg').data([squareData]);
       var svgE = svg.enter().append('svg');
       // @v4 use merge to combine enter and existing selection
       svg = svg.merge(svgE);
@@ -281,7 +283,6 @@ var scrollVis = function () {
               .attr('y', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
               .attr('x', function() {if (x < 100) { return x+120;} else { return x-40;}})
               .text("..."+getRandomWord()+"...")
-
                       })
             .on("mouseout", function() {
               d3.select(this).style('fill', "#ef233c");
@@ -297,22 +298,18 @@ var scrollVis = function () {
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
       // perform some preprocessing on raw data
-      var wordData = getWords(rawData);
-
-      // in my line chart, the x axis is time
+      var squareData = getWords(rawData);
 
       // filter to just include filler words
-      var fillerWords = getFillerWords(wordData);
+      var fillerWords = getFillerWords(squareData);
 
       // get the counts of filler words for the
       // bar chart display
       var fillerCounts = groupByWord(fillerWords);
       // set the bar scale's domain
-      var countMax = d3.max(fillerCounts, function (d) { return d.value;});
-      xBarScale.domain([0, countMax]);
 
 
-      setupVis(wordData, fillerCounts, hpdData, hpdClass, hpdCategorical, combinedDob);
+      setupVis(squareData, fillerCounts, hpdData, hpdClass, hpdCategorical, combinedDob, hpdLit);
 
       setupSections();
     });
@@ -323,13 +320,13 @@ var scrollVis = function () {
    * setupVis - creates initial elements for all
    * sections of the visualization.
    *
-   * @param wordData - data object for each word.
+   * @param squareData - data object for each word.
    * @param hpdData - data object for hpd_harlem
    * @param fillerCounts - nested data that includes
    *  element for each filler word type.
    * @param histData - binned histogram data
    */
-  var setupVis = function (wordData, fillerCounts, hpdData, hpdClass, hpdCategorical, combinedDob) {
+  var setupVis = function (squareData, fillerCounts, hpdData, hpdClass, hpdCategorical, combinedDob, hpdLit) {
 
   //axes
   //********************************************************************************
@@ -337,90 +334,11 @@ var scrollVis = function () {
 //titles
 //********************************************************************************
 
-// Quote 1
-g.append('text')
-      .attr('class', 'start-title openvis-title')
-      .attr('x', -60)
-      .attr('y', 100)
-      .attr('fill', 'red')
-      .text('"');
-
-    g.append('text')
-      .attr('class', 'quotes-title openvis-title')
-      .attr('x', -40)
-      .attr('y', 100)
-      .attr('fill', 'red')
-      .text('They offered us money to move to Bronx. The same person  ');
-
-      g.append('text')
-      .attr('class', 'quotes-title openvis-title')
-      .attr('x', -40)
-      .attr('y', 140)
-      .attr('fill', 'red')
-      .text('has knocked on my door 6 times since Christmas...');
-
-      g.append('text')
-      .attr('class', 'start-title openvis-title')
-      .attr('x', 570)
-      .attr('y', 170)
-      .attr('fill', 'red')
-      .text('"');
-
-      g.append('text')
-      .attr('class', 'author-title openvis-title')
-      .attr('x', 420)
-      .attr('y', 170)
-      .attr('fill', 'white')
-      .text('~Edgar Gonzaga (tenant)');
-
-      g.append('text')
-      .attr('class', 'start-title openvis-title')
-      .attr('x', -60)
-      .attr('y', 100)
-      .attr('fill', 'red')
-      .text('"');
-
-// Quote 2
-g.append('text')
-      .attr('class', 'start-title openvis-title')
-      .attr('x', -60)
-      .attr('y', 450)
-      .attr('fill', 'red')
-      .text('"');
-
-    g.append('text')
-      .attr('class', 'quotes-title openvis-title')
-      .attr('x', -40)
-      .attr('y', 450)
-      .attr('fill', 'red')
-      .text('They asked me to leave. But I have lived in this apartment');
-
-      g.append('text')
-      .attr('class', 'quotes-title openvis-title')
-      .attr('x', -40)
-      .attr('y', 490)
-      .attr('fill', 'red')
-      .text('for 20 years, this is my home...');
-
-      g.append('text')
-      .attr('class', 'start-title openvis-title')
-      .attr('x', 570)
-      .attr('y', 520)
-      .attr('fill', 'red')
-      .text('"');
-
-      g.append('text')
-      .attr('class', 'author-title openvis-title')
-      .attr('x', 400)
-      .attr('y', 520)
-      .attr('fill', 'white')
-      .text('~Guillermina Carche (tenant)');
-
 
     g.selectAll('.openvis-title')
       .attr('opacity', 0);
 
-          // count filler word count title
+          // 49 Buildings in East Harlem Title
     g.append('text')
       .attr('class', 'title count-title highlight')
       .attr('x', width / 2)
@@ -439,7 +357,7 @@ g.append('text')
 //portfolio squares
 //********************************************************************************
     var squares = g.selectAll('.square')
-                    .data(wordData, function (d) { return d.word; });
+                    .data(squareData, function (d) { return d.word; });
     var squaresE = squares.enter()
       .append('rect')
       .classed('square', true);
@@ -458,37 +376,34 @@ g.append('text')
     x = d3.scaleTime().rangeRound([0, width]);
     y = d3.scaleLinear().rangeRound([height, 0]);
 
-    var maxY = d3.max(hpdData, function(d) { return +(d.East_Harlem_Count*51170);} );
+    var maxY = d3.max(hpdData, function(d) { return +(d.East_Harlem_Count);} );
     x.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
     y.domain([0, maxY]);
 
     lineEE = d3.line()
             .x(function (d){ return x(d.receiveddate);})
-            .y(function (d) { return y((+d.Emerald_Equity_Count)*1449);});
+            .y(function (d) { return y(+d.Emerald_Equity_Count);});
 
     lineHarlem = d3.line()
               .x(function (d) { return x(d.receiveddate);})
-              .y(function (d) { return y((+d.East_Harlem_Count)*51170);});
+              .y(function (d) { return y(+d.East_Harlem_Count);});
 
 
-//the Per unit lines
+//the HPD per-unit lines
 //********************************************************************************
     xPU = d3.scaleTime().rangeRound([0, width]);
     yPU = d3.scaleLinear().rangeRound([height, 0]);
 
-    var maxYPU = d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count);} );
-
     xPU.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
-    yPU.domain([0, maxYPU]);
-
+    yPU.domain([0, d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count/1449)})]);
 
     line1 = d3.line()
             .x(function (d){ return xPU(d.receiveddate);})
-            .y(function (d) { return yPU(d.Emerald_Equity_Count);});
+            .y(function (d) { return yPU(d.Emerald_Equity_Count/1449);});
 
     line2 = d3.line()
               .x(function (d) { return xPU(d.receiveddate);})
-              .y(function (d) { return yPU(d.East_Harlem_Count);});
+              .y(function (d) { return yPU(d.East_Harlem_Count/51170);});
 
 //the hpd categorial line chart
 //********************************************************************************
@@ -501,15 +416,52 @@ g.append('text')
 
     lineHPDA = d3.line()
       .x(function (d){return hpdX(d.date); })
-      .y(function (d){return hpdY(d.A); })
+      .y(function (d){return hpdY(d.A); });
 
     lineHPDB = d3.line()
       .x(function (d){return hpdX(d.date); })
-      .y(function (d){return hpdY(d.B); })
+      .y(function (d){return hpdY(d.B); });
 
     lineHPDC = d3.line()
       .x(function (d){return hpdX(d.date); })
       .y(function (d){return hpdY(d.C); });
+//HPD Lit line chart
+//********************************************************************************
+    hpdLitX = d3.scaleTime().rangeRound([0, width]);
+    hpdLitY = d3.scaleLinear().rangeRound([height, 0]);
+
+
+    var maxLitY = d3.max(hpdLit, function(d) { return +(d.count_harlem);} );
+    hpdLitY.domain([0, maxLitY]);
+    hpdLitX.domain(d3.extent(hpdLit, function(d) {return d.caseopendate}));
+
+    lineLitEE = d3.line()
+            .x(function (d){ return hpdLitX(d.caseopendate);})
+            .y(function (d){ return hpdLitY(+d.count_emerald);});
+
+    lineLitHarlem = d3.line()
+              .x(function (d) { return hpdLitX(d.caseopendate);})
+              .y(function (d) { return hpdLitY(+d.count_harlem);});
+
+//HPD Lit line PU
+//********************************************************************************
+
+    xLitPU = d3.scaleTime().rangeRound([0, width]);
+    yLitPU = d3.scaleLinear().rangeRound([height, 0]);
+
+    xLitPU.domain(d3.extent(hpdLit, function(d) { return d.caseopendate; }));
+    yLitPU.domain([0, d3.max(hpdLit, function(d) { return d.count_emerald/1449})]);
+
+
+//These numbers are from nyc-db: unitsres in all BBLs
+    lineLitEE1 = d3.line()
+            .x(function (d){ return xLitPU(d.caseopendate);})
+            .y(function (d) { return yLitPU(d.count_emerald/1449);});
+
+    lineLitHarlem2 = d3.line()
+              .x(function (d) { return xLitPU(d.caseopendate);})
+              .y(function (d) { return yLitPU(d.count_harlem/51170);});
+
 
 
 //the DOB line chart
@@ -528,11 +480,11 @@ g.append('text')
 //********************************************************************************
     lineDOBEEAVG = d3.line()
             .x(function (d){ return xDOBLineScale(d.date);})
-            .y(function (d) { return yDOBAvgLineScale(+d.Emerald_Equity_avg);});
+            .y(function (d) { return yDOBAvgLineScale(+d.emerald_equity_total/1449 * 1000);});
 
     lineDOBHarlemAVG = d3.line()
               .x(function (d) { return xDOBLineScale(d.date);})
-              .y(function (d) { return yDOBAvgLineScale(+d.East_Harlem_avg);});
+              .y(function (d) { return yDOBAvgLineScale(+d.harlem_total/51170 * 1000);});
 //Time to start putting things on the actual page. but transparently
 //********************************************************************************
 
@@ -568,7 +520,7 @@ g.append('text')
       .classed('class-line-chart-A', true)
       .datum(hpdClass)
       .attr("fill", "none")
-      .attr("stroke", "grey")
+      .attr("stroke", "DarkGrey")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
       .attr("stroke-width", .75)
@@ -579,7 +531,7 @@ g.append('text')
       .classed('class-line-chart-B', true)
       .datum(hpdClass)
       .attr("fill", "none")
-      .attr("stroke", "white")
+      .attr("stroke", "Grey")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
       .attr("stroke-width", .5)
@@ -590,11 +542,36 @@ g.append('text')
       .classed('class-line-chart-C', true)
       .datum(hpdClass)
       .attr("fill", "none")
-      .attr("stroke", "red")
+      .attr("stroke", "LightGrey")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
       .attr("stroke-width", .75)
       .attr('d', lineHPDC)
+      .attr('opacity', 0);
+
+//HPD LIT LINES
+//*****************************************************************************
+
+  g.append('path')
+      .classed('line-lit-1', true)
+      .datum(hpdLit)
+      .attr("fill", "none")
+      .attr('stroke', 'red')
+      .attr('stroke-linejoin', "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1.5)
+      .attr('d', lineLitEE)
+      .attr('opacity', 0);
+
+    g.append("path")
+      .classed('line-lit-2', true)
+      .datum(hpdLit)
+      .attr("fill", "none")
+      .attr("stroke", "grey")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 1.5)
+      .attr('d', lineLitHarlem)
       .attr('opacity', 0);
 
 //DOB LINEs
@@ -630,8 +607,8 @@ g.append('text')
     .attr("fill", "white")
     .attr("width", xHPDBarScale.bandwidth())
     .attr("x", function(d) {return xHPDBarScale(d.date);})
-    .attr("y", function(d) {return yHPDBarScale(d.Gas) - 300})
-    .attr("height", function(d) {return +(height- yHPDBarScale(d.Gas));})
+    .attr("y", function(d) {return yHPDBarScale(d.Pests) - 300})
+    .attr("height", function(d) {return +(height- yHPDBarScale(d.Pests));})
     .attr('opacity', 0);
 
 g.selectAll(".hpd-bar-mold")
@@ -672,9 +649,11 @@ g.selectAll(".hpd-bar-gas hpd-bar")
     activateFunctions[5] = showHPDClassA;
     activateFunctions[6] = showHPDClassB;
     activateFunctions[7] = showHPDClassC;
-    activateFunctions[8] = showDOBTotal;
-    activateFunctions[9] = showDOBAverage;
-    activateFunctions[10] = showHPDBar;
+    activateFunctions[8] = showHPDLit;
+    activateFunctions[9] = showHPDLitAvg;
+    activateFunctions[10] = showDOBTotal;
+    activateFunctions[11] = showDOBAverage;
+    activateFunctions[12] = showHPDBar;
 
   };
 
@@ -697,12 +676,7 @@ g.selectAll(".hpd-bar-gas hpd-bar")
 
   function showFillerTitle() {
     hidexAxis();
-    g.selectAll('.openvis-title')
-      .transition()
-      .duration(0)
-      .attr('opacity', 0);
-
-    g.selectAll('.square')
+    g.selectAll('.openvis-title,.square')
       .transition()
       .duration(0)
       .attr('opacity', 0);
@@ -724,10 +698,11 @@ g.selectAll(".hpd-bar-gas hpd-bar")
    */
   function showHighlightGrid() {
     hidexAxis();
-    g.selectAll('.count-title')
+    g.selectAll('.count-title,.line-chart')
       .transition()
       .duration(0)
-      .attr('opacity', 0);
+      .style('opacity',0);
+
 
     g.selectAll('.square')
       .transition()
@@ -737,22 +712,6 @@ g.selectAll(".hpd-bar-gas hpd-bar")
       })
       .attr('opacity', 1.0)
       .attr('fill', '#ddd');
-
-    g.selectAll('.bar')
-      .transition()
-      .duration(1500)
-      .attr('width', 0);
-
-    g.selectAll('.bar-text')
-      .transition()
-      .duration(0)
-      .attr('opacity', 0);
-
-    g.selectAll('.line-chart')
-      .transition()
-      .duration(0)
-      .style('opacity',0);
-
 
     g.selectAll('.square')
       .transition()
@@ -779,17 +738,7 @@ g.selectAll(".hpd-bar-gas hpd-bar")
       .attr('opacity', 1.0)
       .attr('fill', function (d) { return d.filler ? '#ef233c' : '#edf2f4'; });
 
-     g.selectAll('.line-chart1')
-      .transition()
-      .duration(0)
-      .style('opacity',0);
-
-     g.selectAll('.line-chart2')
-      .transition()
-      .duration(0)
-      .style('opacity',0);
-
-    g.selectAll('.y-axis')
+     g.selectAll('.line-chart1,.line-chart2,.y-axis')
       .transition()
       .duration(0)
       .style('opacity', 0);
@@ -801,23 +750,7 @@ function showTotalLine() {
 
   hidexAxis();
 
-  g.selectAll(".annotation")
-    .transition()
-    .duration(0)
-    .attr("opacity", 0);
-
-    g.selectAll('.y-axis')
-      .transition()
-      .duration(800)
-      .style('opacity', 0);
-
-    g.selectAll('.square')
-      .transition()
-      .delay(0)
-      .duration(600)
-      .attr('opacity', 0);
-
-    g.selectAll('.fill-square')
+  g.selectAll(".annotation,.y-axis,.square,.fill-square")
       .transition()
       .duration(600)
       .attr('opacity', 0);
@@ -926,12 +859,7 @@ function showPerUnitLine() {
   function showHPDClassA() {
     hidexAxis();
 
-    g.selectAll(".annotation")
-    .transition()
-    .duration(500)
-    .attr("opacity", 0);
-
-    g.selectAll('.y-axis')
+    g.selectAll(".annotation,.y-axis")
       .transition()
       .duration(0)
       .style('opacity', 0);
@@ -951,12 +879,7 @@ function showPerUnitLine() {
       .style('fill', 'white')
       .style('opacity', 1);
 
-     g.selectAll('.line-chart1')
-      .transition()
-      .duration(0)
-      .style('opacity',0);
-
-    g.selectAll('.line-chart2')
+     g.selectAll('.line-chart1,.line-chart2')
       .transition()
       .duration(0)
       .style('opacity',0);
@@ -1003,12 +926,7 @@ function showHPDClassC() {
       .style('fill', 'white')
       .style('opacity', 1);
 
-    g.selectAll('.class-line-chart-B')
-      .transition()
-      .duration(800)
-      .style('opacity',.5);
-
-    g.selectAll('.class-line-chart-A')
+    g.selectAll('.class-line-chart-B,.class-line-chart-A')
       .transition()
       .duration(800)
       .style('opacity',.5);
@@ -1018,21 +936,103 @@ function showHPDClassC() {
       .duration(1000)
       .style('opacity',1);
 
-    g.selectAll('.dob-line-1')
+    g.selectAll('.line-lit-1,.line-lit-2')
+      .transition()
+      .style('opacity', 0);
+  }
+
+function showHPDLit() {
+  //HIDE HPD CLASS(ES) CHART
+
+  g.selectAll('.class-line-chart-A,.class-line-chart-B,.class-line-chart-C,.annotation')
       .transition()
       .duration(0)
-      .style('opacity', 0);
+      .style('opacity',0);
+  
+  hidexAxis();
+  hideyAxis();
 
-    g.selectAll('.dob-line-2')
+  g.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(hpdLitX))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
+
+    g.append('g')
+      .attr('class', 'y-axis')
+      .transition()
+      .duration(800)
+      .call(d3.axisLeft(hpdLitY))
+    g.select('.y-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
+
+  g.selectAll('.line-lit-1')
+      .datum(hpdLit)
+      .transition()
+      .duration(1000)
+      .attr("d", lineLitEE)
+      .style('opacity',1);
+
+    g.selectAll('.line-lit-2')
+      .datum(hpdLit)
+      .transition()
+      .duration(1000)
+      .attr("d", lineLitHarlem)
+      .style('opacity',1);
+
+  //HIDE DOB LINE CHART
+}
+
+function showHPDLitAvg(){
+
+   g.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(x))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
+
+    g.selectAll('.y-axis')
+      .transition()
+      .duration(1200)
+      .call(d3.axisLeft(yLitPU));
+
+    g.selectAll('.line-lit-1')
+      .datum(hpdLit)
+      .transition()
+      .attr("d", lineLitEE1)
+      .delay(600)
+      .duration(1000)
+      .style('opacity',1);
+
+    g.selectAll('.line-lit-2')
+      .datum(hpdLit)
+      .transition()
+      .attr("d", lineLitHarlem2)
+      .delay(600)
+      .duration(1000)
+      .style('opacity',1);
+
+
+  g.selectAll('.dob-line-1,.dob-line-2,.annotation')
       .transition()
       .duration(0)
       .style('opacity',0);
 
-  }
 
+}
 function showDOBTotal() {
     hidexAxis();
     hideyAxis();
+
+    g.selectAll('.line-lit-1,.line-lit-2')
+      .transition()
+      .duration(0)
+      .style('opacity',0);
 
     g.append("text")
       .attr("opacity", 0)
@@ -1059,21 +1059,6 @@ function showDOBTotal() {
       .transition()
       .duration(1000)
       .attr("opacity", 1);
-
-    g.selectAll('.class-line-chart-A')
-      .transition()
-      .duration(0)
-      .style('opacity',0);
-
-    g.selectAll('.class-line-chart-B')
-      .transition()
-      .duration(0)
-      .style('opacity',0);
-
-    g.selectAll('.class-line-chart-C')
-      .transition()
-      .duration(0)
-      .style('opacity',0);
 
     g.append('g')
       .attr('class', 'x-axis')
@@ -1112,6 +1097,8 @@ function showDOBTotal() {
 function showDOBAverage() {
 
   hideyAxis();
+  hidexAxis();
+
   g.selectAll(".annotation")
     .transition()
     .duration(500)
@@ -1126,16 +1113,26 @@ function showDOBAverage() {
       .style('fill', 'white')
       .style('opacity', 1);
 
+  g.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(d3.axisBottom(xDOBLineScale))
+    g.select('.x-axis')
+      .style('fill', 'white')
+      .style('opacity', 1);
+
 
     g.selectAll('.dob-line-1')
       .transition()
       .duration(800)
-      .attr('d', lineDOBEEAVG);
+      .attr('d', lineDOBEEAVG)
+      .style('opacity', 1);
 
     g.selectAll('.dob-line-2')
       .transition()
       .duration(800)
-      .attr('d', lineDOBHarlemAVG);
+      .attr('d', lineDOBHarlemAVG)
+      .style('opacity', 1);
 
     g.selectAll('.hpd-bar')
       .transition()
@@ -1201,8 +1198,6 @@ function showDOBAverage() {
       .duration(1000)
       .attr("opacity", 1);
 
-
-
     g.append("line")
       .classed("annotation", true)
       .attr("opacity", 0)
@@ -1216,12 +1211,7 @@ function showDOBAverage() {
       .duration(1000)
       .attr("opacity", 1);
 
-     g.selectAll('.dob-line-1')
-      .transition()
-      .duration(800)
-      .style('opacity', 0);
-
-    g.selectAll('.dob-line-2')
+     g.selectAll('.dob-line-1,.dob-line-2')
       .transition()
       .duration(800)
       .style('opacity',0);
@@ -1302,12 +1292,9 @@ function showDOBAverage() {
    */
   function getWords(rawData) {
     return rawData.map(function (d, i) {
-      // is this word a filler word?
+      // is this square an Emerald Equity building?
       d.filler = (d.filler === '1') ? true : false;
       // time in seconds word was spoken
-      d.time = +d.time;
-      // time in minutes word was spoken
-      d.min = Math.floor(d.time / 60);
 
       // positioning for square visual
       // stored here to make it easier
@@ -1360,11 +1347,12 @@ function showDOBAverage() {
     lastIndex = activeIndex;
   };
 
-  chart.setOtherData = function(other, other2, other3, other4){
+  chart.setOtherData = function(other, other2, other3, other4, other5){
     otherData = other;
     otherData2 = other2;
     otherData3 = other3;
     otherData4 = other4;
+    otherData5 = other5;
   };
 
   /**
@@ -1387,12 +1375,12 @@ function showDOBAverage() {
  *
  * @param data - loaded tsv data
  */
-function display(error, portfolio, hpd_harlem, hpd_violations_date_class_resample, hpd_categorical, combined_dob) {
+function display(error, portfolio, hpd_harlem, hpd_violations_date_class_resample, hpd_categorical, combined_dob, harlem_ee_lit) {
   // create a new plot and
   // display it
   var plot = scrollVis();
 
-  plot.setOtherData(hpd_harlem, hpd_violations_date_class_resample, hpd_categorical, combined_dob);
+  plot.setOtherData(hpd_harlem, hpd_violations_date_class_resample, hpd_categorical, combined_dob, harlem_ee_lit);
 
   d3.select('#vis')
     .datum(portfolio)
@@ -1423,4 +1411,5 @@ d3.queue()
   .defer(d3.csv, 'data/hpd_violations_date_class_resample.csv')
   .defer(d3.csv, 'data/hpd_categorical.csv')
   .defer(d3.csv, 'data/combined_dob.csv')
+  .defer(d3.csv, 'data/harlem_ee_lit.csv')
   .await(display)
