@@ -386,43 +386,7 @@ var scrollVis = function () {
       .classed('fill-square', function (d) { return d.filler; })
       .attr('x', function (d) { return d.x;})
       .attr('y', function (d) { return d.y;})
-      .attr('opacity', 0)
-      .on('mouseover', function(d){
-        d3.select(this)
-              .attr('fill', 'white')
-        g.append('rect')
-        .classed('legend-rect', true)
-        .attr('x', width/2-100)
-        .attr('y', height-height/5)
-        .attr('width', 200)
-        .attr('height', 40)
-        .attr('fill', 'white')
-        .attr('opacity', .25);
-
-        g.append('text')
-          .classed('legend-text', true)
-          .attr('x', width/2-80)
-          .attr('y', height-height/5+25)
-          .attr('text-anchor', 'center')
-          .attr('z-index', 1000)
-          .attr('fill', 'red')
-          .text(d.word);
-        console.log(d.word);
-
-      }, {once: true})
-      .on('mouseout', function(d){
-        d3.select(this)
-              .attr('fill', function (d) { return d.filler ? '#ef233c' : '#edf2f4'; });
-        g.selectAll('.legend-text')
-          .transition()
-          .duration(1000)
-          .attr('opacity', 0);
-
-        g.selectAll('.legend-rect')
-          .transition()
-          .duration(500)
-          .attr('opacity', 0);
-      });
+      .attr('opacity', 0);
 
 //Total Harlem/EE Lines
 //********************************************************************************
@@ -729,15 +693,15 @@ g.selectAll(".hpd-bar-gas hpd-bar")
 
   function showFillerTitle() {
     hidexAxis();
-    g.selectAll('.openvis-title,.square')
+    g.selectAll('.openvis-title,.annotation,.y-axis,.square,.fill-square,.legend-rect,.legend-text')
       .transition()
       .duration(0)
       .attr('opacity', 0);
-
     g.selectAll('.count-title')
       .transition()
       .duration(600)
       .attr('opacity', 1.0);
+
 
   }
 
@@ -782,6 +746,39 @@ g.selectAll(".hpd-bar-gas hpd-bar")
       .attr('opacity', 1.0)
       .attr('fill', function (d) { return d.filler ? '#ef233c' : '#edf2f4'; });
 
+    g.selectAll('.fill-square')
+      .on('mouseenter', function(d){
+        d3.select(this)
+              .attr('fill', 'white')
+        g.append('rect')
+        .classed('legend-rect', true)
+        .attr('x', width/2-100)
+        .attr('y', height-height/5)
+        .attr('width', 200)
+        .attr('height', 40)
+        .attr('fill', 'white')
+        .attr('opacity', .25);
+
+        g.append('text')
+          .classed('legend-text', true)
+          .attr('x', width/2-80)
+          .attr('y', height-height/5+25)
+          .attr('text-anchor', 'center')
+          .attr('z-index', 1000)
+          .attr('fill', 'red')
+          .text(d.word);
+        console.log(d.word);
+
+      }, {once: true})
+      .on('mouseout', function(d){
+        d3.select(this)
+              .attr('fill', function (d) { return d.filler ? '#ef233c' : '#edf2f4'; });
+        g.selectAll('.legend-rect,.legend-text')
+          .transition()
+          .duration(2000)
+          .attr('opacity', 0);
+      });
+
      g.selectAll('.line-chart1,.line-chart2,.y-axis')
       .transition()
       .duration(0)
@@ -795,9 +792,9 @@ function showTotalLine() {
   hidexAxis();
   hideyAxis();
 
-  g.selectAll(".annotation,.y-axis,.square,.fill-square")
+  g.selectAll(".annotation,.y-axis,.square,.fill-square,.legend-rect,.legend-text")
       .transition()
-      .duration(600)
+      .duration(0)
       .attr('opacity', 0);
 
     g.append('g')
