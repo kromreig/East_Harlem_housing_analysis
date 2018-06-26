@@ -1,9 +1,3 @@
-/**
- * scrollVis - encapsulates
- * all the code for the visualization
- * using reusable charts pattern:
- * http://bost.ocks.org/mike/chart/
- */
 var scrollVis = function () {
   // constants to define the size
   // and margins of the vis area.
@@ -131,7 +125,7 @@ var scrollVis = function () {
 
 
       xHPDAxis = d3.axisBottom(xHPDBarScale)
-      .tickFormat(d3.timeFormat("%Y"))
+      .tickFormat(d3.timeFormat("%Y-%m"))
       .tickValues(xHPDBarScale.domain().filter(function(d,i){ return !(i%5)}));
 
       //HPD Litig Line
@@ -766,8 +760,8 @@ g.selectAll(".hpd-bar-gas hpd-bar")
           .attr('text-anchor', 'center')
           .attr('z-index', 1000)
           .attr('fill', 'red')
-          .text(d.word);
-        console.log(d.word);
+          .text(d.word)
+          .attr('opacity', 1);
 
       }, {once: true})
       .on('mouseout', function(d){
@@ -892,7 +886,7 @@ function showPerUnitLine() {
       .duration(1000)
       .style('opacity',1);
 
-    g.selectAll('.class-line-chart-A')
+    g.selectAll('.class-line-chart-A,.class-line-chart-B,.class-line-chart-C')
       .transition()
       .duration(0)
       .style('opacity',0)
@@ -936,9 +930,7 @@ function showPerUnitLine() {
     g.selectAll('.class-line-chart-B,.class-line-chart-C')
       .transition()
       .duration(0)
-      .attr('stroke', 'DarkGrey')
-      .attr('stroke-width', .5)
-      .attr('opacity', .5);
+      .attr('opacity', 0);
 
   }
 

@@ -2,7 +2,7 @@ body {background-color: #2b2d42;}
 
 
 .column {
-  width: 890px;
+  width: 1000px;
   background-color: #2b2d42;
   position: relative;
   padding: 80px 10px;
@@ -20,7 +20,7 @@ body {background-color: #2b2d42;}
 
 .buffer {
   position: relative;
-  width: 900px;
+  width: 1000px;
   background-color: #2b2d42;
   height: 300px;
   z-index: 100;
