@@ -68,20 +68,15 @@ var scrollVis = function () {
 
   var chart = function (selection) {
     selection.each(function (rawData) {
-
+      parseTime = d3.timeParse("%Y-%m-%d");
       //Some small processing with the other datasets
 
       otherData.forEach(function (d) {
-
-        //This is where I parse the "otherData"
-        var parseTime = d3.timeParse("%Y-%m-%d");
         d.receiveddate = parseTime(d.receiveddate);
         return d;
       });
 
       otherData2.forEach(function (d) {
-
-        var parseTime = d3.timeParse("%Y-%m-%d");
         d.date = parseTime(d.date);
         d.A = +d.A;
         d.B = +d.B;
@@ -91,7 +86,6 @@ var scrollVis = function () {
       });
 
       otherData3.forEach(function (d) {
-        var parseTime = d3.timeParse("%Y-%m-%d");
         d.date = parseTime(d.date);
         d.Lead = +d.Lead;
         d.Mold = +d.Mold;
@@ -102,7 +96,6 @@ var scrollVis = function () {
       });
 
       otherData4.forEach(function (d) {
-        var parseTime = d3.timeParse("%Y-%m-%d");
         d.date = parseTime(d.inspectiondate);
         d.emerald_equity_total = +d.summed;
         d.harlem_total = +d.summed_harlem;
@@ -110,7 +103,6 @@ var scrollVis = function () {
       });
 
       otherData5.forEach(function (d) {
-        var parseTime = d3.timeParse("%Y-%m-%d");
         d.caseopendate = parseTime(d.caseopendate);
         d.count_harlem = +d.count;
         d.count_emerald = +d.count_ee;
@@ -125,9 +117,6 @@ var scrollVis = function () {
       hpdCategorical = otherData3;
       combinedDob = otherData4;
       hpdLit = otherData5;
-
-      console.log(hpdLit)
-
 
       // HPD Line Chart
 
@@ -145,12 +134,12 @@ var scrollVis = function () {
       .tickFormat(d3.timeFormat("%Y"))
       .tickValues(xHPDBarScale.domain().filter(function(d,i){ return !(i%5)}));
 
-      //HPD Litig Line: scale it to the data
+      //HPD Litig Line
 
       xLitigLineScale.domain(d3.extent(hpdLit, function(d){ return d.caseopendate;}));
       yLitigLineScale.domain([0, d3.max(hpdLit, function(d){ return +(d.count_harlem);})]);
 
-      //DOB Line Chart: scale it to your data!
+      //DOB Line Chart
 
       xDOBLineScale.domain(d3.extent(combinedDob, function(d){ return d.date; }));
       yDOBLineScale.domain([0, d3.max(combinedDob, function(d){ return +d.harlem_total })]);
@@ -397,7 +386,43 @@ var scrollVis = function () {
       .classed('fill-square', function (d) { return d.filler; })
       .attr('x', function (d) { return d.x;})
       .attr('y', function (d) { return d.y;})
-      .attr('opacity', 0);
+      .attr('opacity', 0)
+      .on('mouseover', function(d){
+        d3.select(this)
+              .attr('fill', 'white')
+        g.append('rect')
+        .classed('legend-rect', true)
+        .attr('x', width/2-100)
+        .attr('y', height-height/5)
+        .attr('width', 200)
+        .attr('height', 40)
+        .attr('fill', 'white')
+        .attr('opacity', .25);
+
+        g.append('text')
+          .classed('legend-text', true)
+          .attr('x', width/2-80)
+          .attr('y', height-height/5+25)
+          .attr('text-anchor', 'center')
+          .attr('z-index', 1000)
+          .attr('fill', 'red')
+          .text(d.word);
+        console.log(d.word);
+
+      }, {once: true})
+      .on('mouseout', function(d){
+        d3.select(this)
+              .attr('fill', function (d) { return d.filler ? '#ef233c' : '#edf2f4'; });
+        g.selectAll('.legend-text')
+          .transition()
+          .duration(1000)
+          .attr('opacity', 0);
+
+        g.selectAll('.legend-rect')
+          .transition()
+          .duration(500)
+          .attr('opacity', 0);
+      });
 
 //Total Harlem/EE Lines
 //********************************************************************************
@@ -735,15 +760,6 @@ g.selectAll(".hpd-bar-gas hpd-bar")
     g.selectAll('.square')
       .transition()
       .duration(600)
-      .delay(function (d) {
-        return 5 * d.row;
-      })
-      .attr('opacity', 1.0)
-      .attr('fill', '#ddd');
-
-    g.selectAll('.square')
-      .transition()
-      .duration(0)
       .attr('opacity', 1.0)
       .attr('fill', '#ddd');
 
@@ -915,14 +931,17 @@ function showPerUnitLine() {
 
     g.selectAll('.class-line-chart-A')
       .transition()
-      .delay(800)
       .duration(800)
-      .attr('stroke', 'white')
+      .attr('opacity', 1)
+      .attr('stroke-width', 1)
+      .attr('stroke', 'white');
 
     g.selectAll('.class-line-chart-B,.class-line-chart-C')
       .transition()
       .duration(0)
       .attr('stroke', 'DarkGrey')
+      .attr('stroke-width', .5)
+      .attr('opacity', .5);
 
   }
 
@@ -931,13 +950,16 @@ function showHPDClassB() {
     g.selectAll('.class-line-chart-B')
       .transition()
       .duration(800)
-      .style('stroke', 'white')
-      .style('opacity',1);
+      .attr('stroke-width', 1)
+      .attr('stroke', 'white')
+      .attr('opacity',1);
 
     g.selectAll('.class-line-chart-C,.class-line-chart-A')
       .transition()
       .duration(0)
-      .attr('stroke','DarkGrey');
+      .attr('stroke', 'DarkGrey')
+      .attr('stroke-width', .5)
+      .attr('opacity', .5);
 
   }
 
@@ -958,14 +980,17 @@ function showHPDClassC() {
 
     g.selectAll('.class-line-chart-B,.class-line-chart-A')
       .transition()
-      .duration(800)
-      .style('stroke','DarkGrey');
+      .duration(0)
+      .attr('stroke', 'DarkGrey')
+      .attr('stroke-width', .5)
+      .attr('opacity', .5);
 
     g.selectAll('.class-line-chart-C')
       .transition()
-      .duration(1000)
-      .style('stroke', 'white')
-      .style('opacity',1);
+      .duration(800)
+      .attr('stroke-width', 1)
+      .attr('stroke', 'white')
+      .attr('opacity',1);
 
     g.selectAll('.line-lit-1,.line-lit-2')
       .transition()
@@ -978,7 +1003,7 @@ function showHPDLit() {
   g.selectAll('.class-line-chart-A,.class-line-chart-B,.class-line-chart-C,.annotation')
       .transition()
       .duration(0)
-      .style('opacity',0);
+      .attr('opacity',0);
   
   hidexAxis();
   hideyAxis();
@@ -1019,10 +1044,12 @@ function showHPDLit() {
 
 function showHPDLitAvg(){
 
+  hidexAxis();
+
    g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(hpdLitX))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
