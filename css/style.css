@@ -184,10 +184,24 @@ body {background-color: #2b2d42;}
   font-weight: bold;
 }
 
-.cough-arrow {
-  stroke: #000;
-  stroke-width: 4px;
+.complaint-text{
+  fill: white;
+  font-size: 18px;
+  font-weight: lighter;
+  font: helvetica-neue;
+}
 
+.complaint-date{
+  fill: white;
+  font: helvetica-neue;
+  font-weight: lighter;
+  opacity: 50%;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.complaint-rect{
+  fill: #2b2d42;
 }
 
       

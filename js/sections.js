@@ -66,13 +66,6 @@ var scrollVis = function () {
   // progress through the section.
   var updateFunctions = [];
 
-  /**
-   * chart
-   *
-   * @param selection - the current d3 selection(s)
-   *  to draw the visualization in. For this
-   *  example, we will be drawing it in #vis
-   */
   var chart = function (selection) {
     selection.each(function (rawData) {
 
@@ -95,11 +88,9 @@ var scrollVis = function () {
         d.C = +d.C;
         d.total = +(d.A+d.B+d.C);
         return d;
-
       });
 
       otherData3.forEach(function (d) {
-
         var parseTime = d3.timeParse("%Y-%m-%d");
         d.date = parseTime(d.date);
         d.Lead = +d.Lead;
@@ -108,7 +99,6 @@ var scrollVis = function () {
         d.Heat = +d.Heat;
         d.Pests = +d.Pests;
         return d;
-
       });
 
       otherData4.forEach(function (d) {
@@ -237,55 +227,93 @@ var scrollVis = function () {
                 .transition()
                 .delay(2000)
                 .attr('opacity', 0);
-        innerSVG.selectAll('.complaint-circle')
+        innerSVG.selectAll('.complaint-circle,.complaint-rect,.complaint-date')
                 .transition()
                 .delay(2000)
                 .attr('opacity',0);
         
-            descr=descr_data[this.id]['description']
-            words=descr.split(" ");
+            descr=descr_data[this.id]['complaint']
+            words=descr.split(",");
             x=this.getBBox().x;
             y=this.getBBox().y;
-            if (descr){r=Math.log(descr.length)*Math.log(descr.length)*1.5}
-            else {r = 10};
+            if (descr){r=Math.log(descr.length)*Math.log(descr.length)*1.75}
+            else {r = 15};
 
             var getRandomWord = function () {
               index = Math.floor(Math.random() * words.length)
               return words[index];
             };
-            console.log("x and y", x, y)
+
             d3.select(this)
               .style('fill', 'white');
-            innerSVG.append('circle')
-              .classed('complaint-circle', true)
-              .attr('cy', y)
-              .attr('cx', x)
-              .attr('r', 1)
-              .attr('fill', 'white')
-              .attr('z-index', 1000)
-              .attr('cx', function() {if (x < 100) { return x+120;} else { return x-40;}})
-              .attr('opacity',.75)
+
+            innerSVG.append("rect")
+              .classed('complaint-rect',true)
+              .attr("x", x)
+              .attr("y", y)
+              .attr("height", 0)
+              .attr("width", 240)
+              .attr('color','#2b2d42')
+              .attr('z-index', 1001)
+              .attr('opacity',0)
               .transition()
               .duration(2000)
-              .attr('cy', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
-              .attr('r', r);
-            console.log("DATA FROM:", descr);
+              .attr('opacity',.75)
+              .attr("x", function() {if (x < 100) { return x+100;} else { return x-60;}})
+              .attr("y",  function() {if (y<height/2) {return y+y/2-30;} else { return y-y/2-30;}})
+              .attr("height", 90);
+      
+            innerSVG.append('text')
+              .classed('complaint-date', true)
+              .attr('y', y)
+              .attr('x', x)
+              .attr('font-size', 20)
+              .style("color","red")
+              .attr('text-anchor', 'left')
+              .attr('opacity', 0)
+              .transition()
+              .duration(2000)
+              .attr('opacity', .75)
+              .attr('y', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
+              .attr('x', function() {if (x < 100) { return x+120;} else { return x-40;}})
+              .text(descr_data[this.id]['date'])
 
             innerSVG.append('text')
               .classed('complaint-text', true)
               .attr('y', y)
               .attr('x', x)
-              .attr('font-size', 15)
+              .attr('font-size', 20)
               .attr('color', 'red')
-              .attr('text-anchor', 'middle')
+              .attr('text-anchor', 'left')
+              .attr('opacity', 0)
               .transition()
               .duration(2000)
-              .attr('y', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
+              .attr('opacity',.75)
+              .attr('transform', 'translate(50%,-50%)')
+              .attr('y', function() {if (y<height/2) {return y+y/2+20;} else { return y-y/2+20;}})
               .attr('x', function() {if (x < 100) { return x+120;} else { return x-40;}})
-              .text("..."+getRandomWord()+"...")
-                      })
-            .on("mouseout", function() {
-              d3.select(this).style('fill', "#ef233c");
+              .text("311 Complaint:")
+
+            
+            innerSVG.append('text')
+              .classed('complaint-text', true)
+              .attr('y', y)
+              .attr('x', x)
+              .attr('font-size', 20)
+              .attr('color', 'red')
+              .attr('text-anchor', 'left')
+              .attr('opacity', 0)
+              .transition()
+              .duration(2000)
+              .attr('opacity',.75)
+              .attr('transform', 'translate(50%,-50%)')
+              .attr('y', function() {if (y<height/2) {return y+y/2+40;} else { return y-y/2+40;}})
+              .attr('x', function() {if (x < 100) { return x+120;} else { return x-40;}})
+              .text('"'+getRandomWord()+'"')
+
+                      }, {once: true})
+            .on("mousemove", function() {
+              d3.select(this).transition().style('fill', "#ef233c");
             });
             });
 
@@ -395,15 +423,15 @@ var scrollVis = function () {
     yPU = d3.scaleLinear().rangeRound([height, 0]);
 
     xPU.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
-    yPU.domain([0, d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count/1449)})]);
+    yPU.domain([0, d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count/1449 * 1000)})]);
 
     line1 = d3.line()
             .x(function (d){ return xPU(d.receiveddate);})
-            .y(function (d) { return yPU(d.Emerald_Equity_Count/1449);});
+            .y(function (d) { return yPU(d.Emerald_Equity_Count/1449 * 1000);});
 
     line2 = d3.line()
               .x(function (d) { return xPU(d.receiveddate);})
-              .y(function (d) { return yPU(d.East_Harlem_Count/51170);});
+              .y(function (d) { return yPU(d.East_Harlem_Count/51170 * 1000);});
 
 //the hpd categorial line chart
 //********************************************************************************
@@ -450,17 +478,17 @@ var scrollVis = function () {
     yLitPU = d3.scaleLinear().rangeRound([height, 0]);
 
     xLitPU.domain(d3.extent(hpdLit, function(d) { return d.caseopendate; }));
-    yLitPU.domain([0, d3.max(hpdLit, function(d) { return d.count_emerald/1449})]);
+    yLitPU.domain([0, d3.max(hpdLit, function(d) { return d.count_emerald/1449 * 1000})]);
 
 
 //These numbers are from nyc-db: unitsres in all BBLs
     lineLitEE1 = d3.line()
             .x(function (d){ return xLitPU(d.caseopendate);})
-            .y(function (d) { return yLitPU(d.count_emerald/1449);});
+            .y(function (d) { return yLitPU(d.count_emerald/1449 * 1000);});
 
     lineLitHarlem2 = d3.line()
               .x(function (d) { return xLitPU(d.caseopendate);})
-              .y(function (d) { return yLitPU(d.count_harlem/51170);});
+              .y(function (d) { return yLitPU(d.count_harlem/51170 * 1000);});
 
 
 
@@ -749,6 +777,7 @@ g.selectAll(".hpd-bar-gas hpd-bar")
 function showTotalLine() {
 
   hidexAxis();
+  hideyAxis();
 
   g.selectAll(".annotation,.y-axis,.square,.fill-square")
       .transition()
@@ -888,12 +917,12 @@ function showPerUnitLine() {
       .transition()
       .delay(800)
       .duration(800)
-      .style('opacity',1)
+      .attr('stroke', 'white')
 
-    g.selectAll('.class-line-chart-B')
+    g.selectAll('.class-line-chart-B,.class-line-chart-C')
       .transition()
       .duration(0)
-      .style('opacity',0);
+      .attr('stroke', 'DarkGrey')
 
   }
 
@@ -902,12 +931,13 @@ function showHPDClassB() {
     g.selectAll('.class-line-chart-B')
       .transition()
       .duration(800)
+      .style('stroke', 'white')
       .style('opacity',1);
 
-    g.selectAll('.class-line-chart-C')
+    g.selectAll('.class-line-chart-C,.class-line-chart-A')
       .transition()
       .duration(0)
-      .style('opacity',0);
+      .attr('stroke','DarkGrey');
 
   }
 
@@ -929,11 +959,12 @@ function showHPDClassC() {
     g.selectAll('.class-line-chart-B,.class-line-chart-A')
       .transition()
       .duration(800)
-      .style('opacity',.5);
+      .style('stroke','DarkGrey');
 
     g.selectAll('.class-line-chart-C')
       .transition()
       .duration(1000)
+      .style('stroke', 'white')
       .style('opacity',1);
 
     g.selectAll('.line-lit-1,.line-lit-2')
