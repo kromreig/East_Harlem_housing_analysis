@@ -125,7 +125,7 @@ var scrollVis = function () {
 
 
       xHPDAxis = d3.axisBottom(xHPDBarScale)
-      .tickFormat(d3.timeFormat("%Y-%m"))
+      .tickFormat(d3.timeFormat("%Y"))
       .tickValues(xHPDBarScale.domain().filter(function(d,i){ return !(i%5)}));
 
       //HPD Litig Line
@@ -200,19 +200,15 @@ var scrollVis = function () {
 
 
 
-    d3.csv("data/outputforjack.csv", function(data) {
+    d3.csv("data/complaints.csv", function(data) {
     var descr_data=data;
 
     innerSVG.selectAll('.building_polygon')
       .datum(descr_data)
       .on("mouseover", function(data){
-        innerSVG.selectAll('.complaint-text')
+        innerSVG.selectAll('.complaint-text,.complaint-circle,.complaint-rect,.complaint-date')
                 .transition()
-                .delay(2000)
-                .attr('opacity', 0);
-        innerSVG.selectAll('.complaint-circle,.complaint-rect,.complaint-date')
-                .transition()
-                .delay(2000)
+                .delay(500)
                 .attr('opacity',0);
         
             descr=descr_data[this.id]['complaint']
@@ -232,69 +228,58 @@ var scrollVis = function () {
 
             innerSVG.append("rect")
               .classed('complaint-rect',true)
-              .attr("x", x)
-              .attr("y", y)
-              .attr("height", 0)
-              .attr("width", 240)
+              .attr('x', 590)
+              .attr('y',  450)
+              .attr("height", 90)
+              .attr("width", 300)
               .attr('color','#2b2d42')
               .attr('z-index', 1001)
               .attr('opacity',0)
               .transition()
-              .duration(2000)
-              .attr('opacity',.75)
-              .attr("x", function() {if (x < 100) { return x+100;} else { return x-60;}})
-              .attr("y",  function() {if (y<height/2) {return y+y/2-30;} else { return y-y/2-30;}})
-              .attr("height", 90);
+              .duration(1000)
+              .attr('opacity',.75);
       
             innerSVG.append('text')
               .classed('complaint-date', true)
-              .attr('y', y)
-              .attr('x', x)
+              .attr('y', 480)
+              .attr('x', 600)
               .attr('font-size', 20)
               .style("color","red")
               .attr('text-anchor', 'left')
               .attr('opacity', 0)
               .transition()
-              .duration(2000)
+              .duration(1000)
               .attr('opacity', .75)
-              .attr('y', function() {if (y<height/2) {return y+y/2;} else { return y-y/2;}})
-              .attr('x', function() {if (x < 100) { return x+120;} else { return x-40;}})
               .text(descr_data[this.id]['date'])
 
             innerSVG.append('text')
               .classed('complaint-text', true)
-              .attr('y', y)
-              .attr('x', x)
+              .attr('y', 500)
+              .attr('x', 600)
               .attr('font-size', 20)
               .attr('color', 'red')
               .attr('text-anchor', 'left')
               .attr('opacity', 0)
               .transition()
-              .duration(2000)
+              .duration(1000)
               .attr('opacity',.75)
               .attr('transform', 'translate(50%,-50%)')
-              .attr('y', function() {if (y<height/2) {return y+y/2+20;} else { return y-y/2+20;}})
-              .attr('x', function() {if (x < 100) { return x+120;} else { return x-40;}})
               .text("311 Complaint:")
 
             
             innerSVG.append('text')
               .classed('complaint-text', true)
-              .attr('y', y)
-              .attr('x', x)
+              .attr('y', 520)
+              .attr('x', 600)
               .attr('font-size', 20)
               .attr('color', 'red')
               .attr('text-anchor', 'left')
               .attr('opacity', 0)
               .transition()
-              .duration(2000)
+              .duration(1000)
               .attr('opacity',.75)
               .attr('transform', 'translate(50%,-50%)')
-              .attr('y', function() {if (y<height/2) {return y+y/2+40;} else { return y-y/2+40;}})
-              .attr('x', function() {if (x < 100) { return x+120;} else { return x-40;}})
-              .text('"'+getRandomWord()+'"')
-
-                      }, {once: true})
+              .text('"'+getRandomWord()+'"')}, {once: true})
             .on("mousemove", function() {
               d3.select(this).transition().style('fill', "#ef233c");
             });
@@ -791,6 +776,33 @@ function showTotalLine() {
       .duration(0)
       .attr('opacity', 0);
 
+  g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 70)
+      .attr("y", height/4-40)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("Emerald Equity Purchases 49 Buildings")
+      .transition()
+      .duration(1000)
+      .attr("opacity", 1);
+
+    g.append("line")
+      .classed("annotation", true)
+      .attr("opacity", 0)
+      .attr("x1", width/2 + 80)
+      .attr("y1", height-50)
+      .attr("x2", width/2 + 80)
+      .attr("y2", height/5)
+      .attr("stroke-width", .25)
+      .attr("stroke", "white")
+      .transition()
+      .delay(500)
+      .duration(1000)
+      .attr("opacity", 1);
+
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
@@ -927,7 +939,7 @@ function showPerUnitLine() {
       .attr('stroke-width', 1)
       .attr('stroke', 'white');
 
-    g.selectAll('.class-line-chart-B,.class-line-chart-C')
+    g.selectAll('.class-line-chart-B')
       .transition()
       .duration(0)
       .attr('opacity', 0);
@@ -943,12 +955,17 @@ function showHPDClassB() {
       .attr('stroke', 'white')
       .attr('opacity',1);
 
-    g.selectAll('.class-line-chart-C,.class-line-chart-A')
+    g.selectAll('.class-line-chart-A')
       .transition()
       .duration(0)
       .attr('stroke', 'DarkGrey')
       .attr('stroke-width', .5)
       .attr('opacity', .5);
+
+    g.selectAll('.class-line-chart-C')
+      .transition()
+      .duration(0)
+      .attr('opacity', 0);
 
   }
 
@@ -958,6 +975,33 @@ function showHPDClassC() {
     .transition()
     .duration(0)
     .attr("opacity", 0);
+
+    g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 70)
+      .attr("y", height/4-40)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("Emerald Equity Purchases 49 Buildings")
+      .transition()
+      .duration(1000)
+      .attr("opacity", 1);
+
+    g.append("line")
+      .classed("annotation", true)
+      .attr("opacity", 0)
+      .attr("x1", width/2 + 80)
+      .attr("y1", height-50)
+      .attr("x2", width/2 + 80)
+      .attr("y2", height/5)
+      .attr("stroke-width", .25)
+      .attr("stroke", "white")
+      .transition()
+      .delay(500)
+      .duration(1000)
+      .attr("opacity", 1);
 
     g.append('g')
       .attr('class', 'x-axis')
@@ -1034,6 +1078,37 @@ function showHPDLit() {
 function showHPDLitAvg(){
 
   hidexAxis();
+  g.selectAll('.dob-line-1,.dob-line-2,.annotation')
+      .transition()
+      .duration(0)
+      .style('opacity',0);
+
+  g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 130)
+      .attr("y", height/4-40)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("Emerald Equity Purchases 49 Buildings")
+      .transition()
+      .duration(1000)
+      .attr("opacity", 1);
+
+    g.append("line")
+      .classed("annotation", true)
+      .attr("opacity", 0)
+      .attr("x1", width/2 + 190)
+      .attr("y1", height-50)
+      .attr("x2", width/2 + 190)
+      .attr("y2", height/5)
+      .attr("stroke-width", .25)
+      .attr("stroke", "white")
+      .transition()
+      .delay(500)
+      .duration(1000)
+      .attr("opacity", 1);
 
    g.append('g')
       .attr('class', 'x-axis')
@@ -1065,47 +1140,15 @@ function showHPDLitAvg(){
       .style('opacity',1);
 
 
-  g.selectAll('.dob-line-1,.dob-line-2,.annotation')
-      .transition()
-      .duration(0)
-      .style('opacity',0);
-
-
 }
 function showDOBTotal() {
     hidexAxis();
     hideyAxis();
 
-    g.selectAll('.line-lit-1,.line-lit-2')
+    g.selectAll('.line-lit-1,.line-lit-2,.annotation')
       .transition()
       .duration(0)
       .style('opacity',0);
-
-    g.append("text")
-      .attr("opacity", 0)
-      .classed("annotation", true)
-      .attr("text-anchor", "middle")
-      .attr("x", width/2 + 140)
-      .attr("y", height/4-40)
-      .attr("font-size", 20)
-      .attr("fill", "white")
-      .text("Emerald Equity Purchases 49 Buildings")
-      .transition()
-      .duration(1000)
-      .attr("opacity", 1);
-
-    g.append("line")
-      .classed("annotation", true)
-      .attr("opacity", 0)
-      .attr("x1", width/2 + 140)
-      .attr("y1", height-50)
-      .attr("x2", width/2 + 140)
-      .attr("y2", height/5)
-      .attr("stroke-width", .25)
-      .attr("stroke", "white")
-      .transition()
-      .duration(1000)
-      .attr("opacity", 1);
 
     g.append('g')
       .attr('class', 'x-axis')
@@ -1150,6 +1193,32 @@ function showDOBAverage() {
     .transition()
     .duration(500)
     .attr("opacity", 0);
+
+  g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 140)
+      .attr("y", height/4-40)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("Emerald Equity Purchases 49 Buildings")
+      .transition()
+      .duration(1000)
+      .attr("opacity", 1);
+
+    g.append("line")
+      .classed("annotation", true)
+      .attr("opacity", 0)
+      .attr("x1", width/2 + 140)
+      .attr("y1", height-50)
+      .attr("x2", width/2 + 140)
+      .attr("y2", height/5)
+      .attr("stroke-width", .25)
+      .attr("stroke", "white")
+      .transition()
+      .duration(1000)
+      .attr("opacity", 1);
 
   g.append('g')
       .attr('class', 'y-axis')
