@@ -776,33 +776,6 @@ function showTotalLine() {
       .duration(0)
       .attr('opacity', 0);
 
-  g.append("text")
-      .attr("opacity", 0)
-      .classed("annotation", true)
-      .attr("text-anchor", "middle")
-      .attr("x", width/2 + 70)
-      .attr("y", height/4-40)
-      .attr("font-size", 20)
-      .attr("fill", "white")
-      .text("Emerald Equity Purchases 49 Buildings")
-      .transition()
-      .duration(1000)
-      .attr("opacity", 1);
-
-    g.append("line")
-      .classed("annotation", true)
-      .attr("opacity", 0)
-      .attr("x1", width/2 + 80)
-      .attr("y1", height-50)
-      .attr("x2", width/2 + 80)
-      .attr("y2", height/5)
-      .attr("stroke-width", .25)
-      .attr("stroke", "white")
-      .transition()
-      .delay(500)
-      .duration(1000)
-      .attr("opacity", 1);
-
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
