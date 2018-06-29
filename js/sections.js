@@ -28,19 +28,19 @@ var scrollVis = function () {
   //Scales for DOB Line Chart
 
   xDOBLineScale = d3.scaleTime().range([0, width]);
-  yDOBLineScale = d3.scaleLinear().rangeRound([height, 0]);
-  yDOBAvgLineScale = d3.scaleLinear().rangeRound([height, 0]);
+  yDOBLineScale = d3.scaleLinear().rangeRound([height, 15]);
+  yDOBAvgLineScale = d3.scaleLinear().rangeRound([height, 15]);
   
 
   //SCALES FOR FIRST HPD LINE CHART
 
   var xLineScale = d3.scaleTime().rangeRound([0, width]);
-  var yLineScale = d3.scaleLinear().rangeRound([height, 0]);
+  var yLineScale = d3.scaleLinear().rangeRound([height, 15]);
 
   //SCALES FOR HPD LITIGATION LINE CHART
 
   var xLitigLineScale = d3.scaleTime().rangeRound([0, width]);
-  var yLitigLineScale = d3.scaleLinear().rangeRound([height, 0]);
+  var yLitigLineScale = d3.scaleLinear().rangeRound([height, 15]);
 
   //SCALES FOR HPD BAR CHART
 
@@ -50,7 +50,7 @@ var scrollVis = function () {
     .align(0.1);
 
   var yHPDBarScale = d3.scaleLinear()
-    .rangeRound([height, 0]);
+    .rangeRound([height, 15]);
 
   var activateFunctions = [];
 
@@ -370,7 +370,7 @@ var scrollVis = function () {
 //Total Harlem/EE Lines
 //********************************************************************************
     x = d3.scaleTime().rangeRound([0, width]);
-    y = d3.scaleLinear().rangeRound([height, 0]);
+    y = d3.scaleLinear().rangeRound([height, 15]);
 
     var maxY = d3.max(hpdData, function(d) { return +(d.East_Harlem_Count);} );
     x.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
@@ -387,8 +387,17 @@ var scrollVis = function () {
 
 //the HPD per-unit lines
 //********************************************************************************
+    svg.append("text")
+    .attr("class", "ylabelHPDPU")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("HPD Complaints per 1000 Units")
+    .attr('opacity', 0);
+
     xPU = d3.scaleTime().rangeRound([0, width]);
-    yPU = d3.scaleLinear().rangeRound([height, 0]);
+    yPU = d3.scaleLinear().rangeRound([height, 15]);
 
     xPU.domain(d3.extent(hpdData, function(d) { return d.receiveddate; }));
     yPU.domain([0, d3.max(hpdData, function(d) { return +(d.Emerald_Equity_Count/1449 * 1000)})]);
@@ -404,7 +413,16 @@ var scrollVis = function () {
 //the hpd categorial line chart
 //********************************************************************************
     hpdX = d3.scaleTime().rangeRound([0, width]);
-    hpdY = d3.scaleLinear().rangeRound([height, 3]);
+    hpdY = d3.scaleLinear().rangeRound([height, 18]);
+
+  g.append("text")
+    .attr("class", "ylabel")
+    .attr("fill", "white")
+    .attr("stroke-width", .5)
+    .attr("y", 0)
+    .attr("x", 0)
+    .attr("dy", ".75em")
+    .attr("opacity", 0);
 
     hpdYmax= d3.max(hpdClass, function(d) { return (d.B);});
     hpdX.domain(d3.extent(hpdClass, function(d) { return d.date; }));
@@ -424,7 +442,7 @@ var scrollVis = function () {
 //HPD Lit line chart
 //********************************************************************************
     hpdLitX = d3.scaleTime().rangeRound([0, width]);
-    hpdLitY = d3.scaleLinear().rangeRound([height, 0]);
+    hpdLitY = d3.scaleLinear().rangeRound([height, 15]);
 
 
     var maxLitY = d3.max(hpdLit, function(d) { return +(d.count_harlem);} );
@@ -443,7 +461,7 @@ var scrollVis = function () {
 //********************************************************************************
 
     xLitPU = d3.scaleTime().rangeRound([0, width]);
-    yLitPU = d3.scaleLinear().rangeRound([height, 0]);
+    yLitPU = d3.scaleLinear().rangeRound([height, 15]);
 
     xLitPU.domain(d3.extent(hpdLit, function(d) { return d.caseopendate; }));
     yLitPU.domain([0, d3.max(hpdLit, function(d) { return d.count_emerald/1449 * 1000})]);
@@ -793,6 +811,11 @@ function showTotalLine() {
       .style('fill', 'white')
       .style('opacity', 1);
 
+    g.selectAll(".ylabel")
+    .transition()
+    .attr("opacity", 1)
+    .text("Total HPD complaints");
+
     g.selectAll('.line-chart1')
       .datum(hpdData)
       .transition()
@@ -814,7 +837,11 @@ function showTotalLine() {
 
 function showPerUnitLine() {
   hidexAxis();
-
+  
+    g.selectAll(".ylabel")
+      .transition()
+      .text("HPD Complaints per 1000 Units");
+  
     g.append("text")
       .attr("opacity", 0)
       .classed("annotation", true)
@@ -880,6 +907,10 @@ function showPerUnitLine() {
   function showHPDClassA() {
     hidexAxis();
 
+     g.selectAll(".ylabel")
+      .transition()
+      .text("HPD Class A Violations");
+
     g.selectAll(".annotation,.y-axis")
       .transition()
       .duration(0)
@@ -921,6 +952,10 @@ function showPerUnitLine() {
 
 function showHPDClassB() {
 
+     g.selectAll(".ylabel")
+      .transition()
+      .text("HPD Class B Violations");
+
     g.selectAll('.class-line-chart-B')
       .transition()
       .duration(800)
@@ -944,6 +979,11 @@ function showHPDClassB() {
 
 function showHPDClassC() {
     hidexAxis();
+
+     g.selectAll(".ylabel")
+      .transition()
+      .text("HPD Class C Violations");
+
     g.selectAll(".annotation")
     .transition()
     .duration(0)
@@ -1006,6 +1046,10 @@ function showHPDClassC() {
 function showHPDLit() {
   //HIDE HPD CLASS(ES) CHART
 
+   g.selectAll(".ylabel")
+      .transition()
+      .text("HPD Litigations");
+
   g.selectAll('.class-line-chart-A,.class-line-chart-B,.class-line-chart-C,.annotation')
       .transition()
       .duration(0)
@@ -1049,6 +1093,9 @@ function showHPDLit() {
 }
 
 function showHPDLitAvg(){
+   g.selectAll(".ylabel")
+      .transition()
+      .text("HPD Litigations per 1000 Units");
 
   hidexAxis();
   g.selectAll('.dob-line-1,.dob-line-2,.annotation')
@@ -1118,6 +1165,10 @@ function showDOBTotal() {
     hidexAxis();
     hideyAxis();
 
+     g.selectAll(".ylabel")
+      .transition()
+      .text("DOB Violations");
+
     g.selectAll('.line-lit-1,.line-lit-2,.annotation')
       .transition()
       .duration(0)
@@ -1161,6 +1212,10 @@ function showDOBAverage() {
 
   hideyAxis();
   hidexAxis();
+
+    g.selectAll(".ylabel")
+      .transition()
+      .text("DOB Violations per 1000 Units");
 
   g.selectAll(".annotation")
     .transition()
