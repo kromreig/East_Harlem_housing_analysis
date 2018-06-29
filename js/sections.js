@@ -1217,7 +1217,7 @@ function showDOBTotal() {
 
      g.selectAll(".ylabel")
       .transition()
-      .text("DOB Violations");
+      .text("DOB Complaints");
 
     g.selectAll('.line-lit-1,.line-lit-2,.annotation')
       .transition()
@@ -1265,7 +1265,7 @@ function showDOBAverage() {
 
     g.selectAll(".ylabel")
       .transition()
-      .text("DOB Violations per 1000 Units");
+      .text("DOB Complaints per 1000 Units");
 
   g.selectAll(".annotation")
     .transition()
