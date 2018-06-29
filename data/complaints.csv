@@ -1,55 +1,55 @@
-id,date,complaint
-1016430070,2015-05-22,"loose or defective door"
-1016670039,2015-10-04,"unsanitary conditions/pests mice"
-1017080011,2015-12-18,"lock broken or missing"
-1017830003,2017-02-27,"broken or missing plumbing"
-1016280052,2017-06-20,"faucet broken missing leaking"
-1016650038,2017-07-01,"tile broken or missing"
-1016300002,2017-09-04,"chipped or rusted plumbing"
-1017830004,2017-10-16,"no hot water no heat entire building"
-1016810007,2017-11-03,"collapsing or falling ceiling"
-1016280022,2017-11-22,"bulging hole cracked paint plaster"
-1017840021,2018-01-05,"bowl loose or wobbly toilet"
-1016820051,2018-01-16,"no heat and no hot water apartment only"
-1016280050,2018-01-17,"entire apartment electric power outage"
-1016770041,2018-02-08,"illegal electric wiring"
-1016300065,2018-02-11,"pipe leaking"
-1016650034,2018-02-14,"cabinet falling off wall"
-1018470066,2018-02-22,"slow water leak"
-1016770040,2018-03-09,"window stuck closed or open"
-1016380015,2018-03-21,"frame broken"
-1016770044,2018-03-23,"slow water leak"
-1016300072,2018-03-27,"chipped peeling flaking paint"
-1017090024,2018-03-31,"broken or defective flooring"
-3033260065,2018-04-06,"damaged or missing cabinet"
-1016670009,2018-04-09,"electric gas range control knob broken or missing"
-1016300069,2018-04-12,"broken door seal"
-1018470068,2018-04-13,"broken or missing door"
-1017080007,2018-04-17,"no hot water no heat entire building"
-1018480031,2018-04-19,"heavywater leak"
-1016330051,2018-04-19,"lock broken or missing"
-1016280020,2018-04-24,"lock broken or missing"
-1016300061,2018-04-24,"collapsing or falling ceiling"
-1016660028,2018-04-25,"dirty or unsanitary paint plaster"
-1016440059,2018-04-26,"dirty or unsanitary paint plaster"
-1016380016,2018-04-30,"chipped peeling flaking paint plaster"
-3033260062,2018-04-30,"slow water leak"
-1016880040,2018-05-01,"no water toilet"
-1017080013,2018-05-08,"flush handle broken or missing plumbing"
-1018060007,2018-05-08,"broken or missing door"
-1016870011,2018-05-10,"broken or missing door"
-1016610017,2018-05-10,"broken or missing door"
-1016650033,2018-05-11,"bed bugs"
-1016300067,2018-05-15,"roaches"
-1016300063,2018-05-17,"slow water leak"
-1016610018,2018-05-17,"no heat and no hot water entire building"
-1016880044,2018-05-18,"rubbish accumulation"
-1016610044,2018-05-22,"no heat and no hot water entire building"
-1017080010,2018-05-23,"no heat and no hot water apartment only"
-1016450001,2018-05-23,"no heat no hot water apartment only"
-1016600031,2018-05-25,"heavy water leak"
-1016880042,2018-05-26,"no hot water entire building"
-1016610016,2018-05-29,"broken or missing bell buzzer intercom"
-1017080008,2018-05-30,"no water"
-1016670016,2018-05-31,"broken or missing door"
-1016670018,2018-05-31,""
+,id,date,complaint
+0,1016430070,05/22/2015,loose or defective door
+1,1016670039,10/04/2015,unsanitary conditions/pests mice
+2,1017080011,12/18/2015,lock broken or missing
+3,1017830003,02/27/2017,broken or missing plumbing
+4,1016280052,06/20/2017,faucet broken missing leaking
+5,1016650038,07/01/2017,tile broken or missing
+6,1016300002,09/04/2017,chipped or rusted plumbing
+7,1017830004,10/16/2017,no hot water no heat entire building
+8,1016810007,11/03/2017,collapsing or falling ceiling
+9,1016280022,11/22/2017,bulging hole cracked paint plaster
+10,1017840021,01/05/2018,bowl loose or wobbly toilet
+11,1016820051,01/16/2018,no heat and no hot water apartment only
+12,1016280050,01/17/2018,entire apartment electric power outage
+13,1016770041,02/08/2018,illegal electric wiring
+14,1016300065,02/11/2018,pipe leaking
+15,1016650034,02/14/2018,cabinet falling off wall
+16,1018470066,02/22/2018,slow water leak
+17,1016770040,03/09/2018,window stuck closed or open
+18,1016380015,03/21/2018,frame broken
+19,1016770044,03/23/2018,slow water leak
+20,1016300072,03/27/2018,chipped peeling flaking paint
+21,1017090024,03/31/2018,broken or defective flooring
+22,3033260065,04/06/2018,damaged or missing cabinet
+23,1016670009,04/09/2018,electric gas range control knob broken or missing
+24,1016300069,04/12/2018,broken door seal
+25,1018470068,04/13/2018,broken or missing door
+26,1017080007,04/17/2018,no hot water no heat entire building
+27,1018480031,04/19/2018,heavywater leak
+28,1016330051,04/19/2018,lock broken or missing
+29,1016280020,04/24/2018,lock broken or missing
+30,1016300061,04/24/2018,collapsing or falling ceiling
+31,1016660028,04/25/2018,dirty or unsanitary paint plaster
+32,1016440059,04/26/2018,dirty or unsanitary paint plaster
+33,1016380016,04/30/2018,chipped peeling flaking paint plaster
+34,3033260062,04/30/2018,slow water leak
+35,1016880040,05/01/2018,no water toilet
+36,1017080013,05/08/2018,flush handle broken or missing plumbing
+37,1018060007,05/08/2018,broken or missing door
+38,1016870011,05/10/2018,broken or missing door
+39,1016610017,05/10/2018,broken or missing door
+40,1016650033,05/11/2018,bed bugs
+41,1016300067,05/15/2018,roaches
+42,1016300063,05/17/2018,slow water leak
+43,1016610018,05/17/2018,no heat and no hot water entire building
+44,1016880044,05/18/2018,rubbish accumulation
+45,1016610044,05/22/2018,no heat and no hot water entire building
+46,1017080010,05/23/2018,no heat and no hot water apartment only
+47,1016450001,05/23/2018,no heat no hot water apartment only
+48,1016600031,05/25/2018,heavy water leak
+49,1016880042,05/26/2018,no hot water entire building
+50,1016610016,05/29/2018,broken or missing bell buzzer intercom
+51,1017080008,05/30/2018,no water
+52,1016670016,05/31/2018,broken or missing door
+53,1016670018,05/31/2018,

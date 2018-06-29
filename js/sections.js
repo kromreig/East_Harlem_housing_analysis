@@ -118,7 +118,7 @@ var scrollVis = function () {
       yLineScale.domain([0, d3.max(hpdData, function(d){ return +(d.East_Harlem_Count);})])
 
       //HPD BAR CHART
-      formatDate = d3.timeFormat("%Y-%m-%d")
+      formatDate = d3.timeFormat("%m-%Y")
 
       xHPDBarScale.domain(hpdCategorical.map(function(d){ return d.date; }));
       yHPDBarScale.domain([0, d3.max(hpdCategorical, function(d){ return (d.Lead + d.Mold + d.Gas + d.Heat + d.Pests)})]).nice();
