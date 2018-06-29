@@ -27,7 +27,7 @@ var scrollVis = function () {
 
   //Scales for DOB Line Chart
 
-  xDOBLineScale = d3.scaleTime().range([0, width]);
+  xDOBLineScale = d3.scaleTime().rangeRound([0, width]);
   yDOBLineScale = d3.scaleLinear().rangeRound([height, 15]);
   yDOBAvgLineScale = d3.scaleLinear().rangeRound([height, 15]);
   
@@ -424,6 +424,24 @@ var scrollVis = function () {
     .attr("dy", ".75em")
     .attr("opacity", 0);
 
+  g.append("rect")
+    .classed("key", true)
+    .attr("x1", width-30)
+    .attr("x2", width-40)
+    .attr("y1", height/5)
+    .attr("y2", height/5+10)
+    .attr("fill", "#edf2f4")
+    .attr("opacity", 0);
+
+  g.append("text")
+    .classed("key", true)
+    .text("Emerald Equity")
+    .attr("fill", "#edf2f4")
+    .attr("font-size", 15)
+    .attr("x", width-80)
+    .attr("y", height/5)
+    .attr("opacity", 0);
+
     hpdYmax= d3.max(hpdClass, function(d) { return (d.B);});
     hpdX.domain(d3.extent(hpdClass, function(d) { return d.date; }));
     hpdY.domain([0, hpdYmax]);
@@ -690,7 +708,7 @@ g.selectAll(".hpd-bar-gas hpd-bar")
 
   function showFillerTitle() {
     hidexAxis();
-    g.selectAll('.openvis-title,.annotation,.y-axis,.square,.fill-square,.legend-rect,.legend-text')
+    g.selectAll('.openvis-title,.annotation,.y-axis,.square,.fill-square,.legend-rect,.legend-text,.ylabel')
       .transition()
       .duration(0)
       .attr('opacity', 0);
@@ -786,6 +804,10 @@ g.selectAll(".hpd-bar-gas hpd-bar")
 
 function showTotalLine() {
 
+  g.selectAll(".key")
+    .transition()
+    .attr("opacity", 0);
+
   hidexAxis();
   hideyAxis();
 
@@ -797,7 +819,7 @@ function showTotalLine() {
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b-%y")))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
@@ -840,8 +862,23 @@ function showPerUnitLine() {
   
     g.selectAll(".ylabel")
       .transition()
+      .attr("opacity", 1)
       .text("HPD Complaints per 1000 Units");
   
+
+    g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 70)
+      .attr("y", height/4-60)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("December 16, 2016")
+      .transition()
+      .duration(1000)
+      .attr("opacity", 1);
+
     g.append("text")
       .attr("opacity", 0)
       .classed("annotation", true)
@@ -858,9 +895,9 @@ function showPerUnitLine() {
     g.append("line")
       .classed("annotation", true)
       .attr("opacity", 0)
-      .attr("x1", width/2 + 80)
+      .attr("x1", width/2 + 95)
       .attr("y1", height-50)
-      .attr("x2", width/2 + 80)
+      .attr("x2", width/2 + 95)
       .attr("y2", height/5)
       .attr("stroke-width", .25)
       .attr("stroke", "white")
@@ -872,7 +909,7 @@ function showPerUnitLine() {
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b-%y")))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
@@ -919,7 +956,7 @@ function showPerUnitLine() {
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(hpdX))
+      .call(d3.axisBottom(hpdX).tickFormat(d3.timeFormat("%b-%y")))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
@@ -994,6 +1031,19 @@ function showHPDClassC() {
       .classed("annotation", true)
       .attr("text-anchor", "middle")
       .attr("x", width/2 + 70)
+      .attr("y", height/4-60)
+      .attr("font-size", 20)
+      .attr("fill", "white")
+      .text("December 16, 2016")
+      .transition()
+      .duration(1000)
+      .attr("opacity", 1);
+
+    g.append("text")
+      .attr("opacity", 0)
+      .classed("annotation", true)
+      .attr("text-anchor", "middle")
+      .attr("x", width/2 + 70)
       .attr("y", height/4-40)
       .attr("font-size", 20)
       .attr("fill", "white")
@@ -1019,7 +1069,7 @@ function showHPDClassC() {
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(hpdX))
+      .call(d3.axisBottom(hpdX).tickFormat(d3.timeFormat("%b-%y")))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
@@ -1061,7 +1111,7 @@ function showHPDLit() {
   g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(hpdLitX))
+      .call(d3.axisBottom(hpdLitX).tickFormat(d3.timeFormat("%b-%y")))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
@@ -1133,7 +1183,7 @@ function showHPDLitAvg(){
    g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(hpdLitX))
+      .call(d3.axisBottom(hpdLitX).tickFormat(d3.timeFormat("%b-%y")))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
@@ -1177,7 +1227,7 @@ function showDOBTotal() {
     g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(xDOBLineScale))
+      .call(d3.axisBottom(xDOBLineScale).tickFormat(d3.timeFormat("%b-%y")))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
@@ -1260,7 +1310,7 @@ function showDOBAverage() {
   g.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(xDOBLineScale))
+      .call(d3.axisBottom(xDOBLineScale).tickFormat(d3.timeFormat("%b-%y")))
     g.select('.x-axis')
       .style('fill', 'white')
       .style('opacity', 1);
